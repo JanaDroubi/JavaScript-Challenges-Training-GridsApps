@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 8: Filter Products by Price</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #3F51B5; color: white; border: none; }
+        .product { padding: 10px; margin: 5px; background: #e8eaf6; border-radius: 5px; }
+        .expensive { background: #ffebee; border-left: 4px solid #f44336; }
+        .cheap { background: #e8f5e9; border-left: 4px solid #4CAF50; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 8: Filter Products > $50</h1>
+    
+    <div class="code">
+        <p>let json = '[{"name":"Shirt","price":45},{"name":"Shoes","price":80},{"name":"Hat","price":25}]';</p>
+    </div>
+    
+    <p>Parse JSON and show only products with price > 50</p>
+    
+    <button onclick="filterProducts()">Filter Products</button>
+    <button onclick="showAll()">Show All Products</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#f5f5f5;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        const productsJSON = '[{"name":"Shirt","price":45},{"name":"Shoes","price":80},{"name":"Hat","price":25},{"name":"Watch","price":120}]';
+        
+        function filterProducts() {
+            let products = JSON.parse(productsJSON);
+            let filtered = products.filter(product => product.price > 50);
+            
+            displayProducts(filtered, 'Products over $50');
+            console.log('Filtered products:', filtered);
+        }
+        
+        function showAll() {
+            let products = JSON.parse(productsJSON);
+            displayProducts(products, 'All Products');
+            console.log('All products:', products);
+        }
+        
+        function displayProducts(products, title) {
+            let result = `<h3>${title} (${products.length} items)</h3>`;
+            
+            if (products.length === 0) {
+                result += '<p>No products found</p>';
+            } else {
+                products.forEach(product => {
+                    let className = product.price > 50 ? 'product expensive' : 'product cheap';
+                    result += `<div class="${className}">
+                        <strong>${product.name}</strong><br>
+                        Price: $${product.price}
+                    </div>`;
+                });
+            }
+            
+            // Add statistics
+            let total = products.reduce((sum, p) => sum + p.price, 0);
+            let average = products.length > 0 ? total / products.length : 0;
+            
+            result += `<div style="margin-top:15px; padding:10px; background:#e3f2fd;">
+                <strong>Statistics:</strong><br>
+                Total value: $${total}<br>
+                Average price: $${average.toFixed(2)}
+            </div>`;
+            
+            document.getElementById('result').innerHTML = result;
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let json = '[{"name":"Shirt","price":45},{"name":"Shoes","price":80},{"name":"Hat","price":25}]';
+let products = JSON.parse(json);
+
+// Method 1: filter() - returns new array
+let expensiveProducts = products.filter(product => product.price > 50);
+console.log('Products over $50:', expensiveProducts);
+// [{name: "Shoes", price: 80}]
+
+// Method 2: for loop
+let expensive = [];
+for (let i = 0; i < products.length; i++) {
+    if (products[i].price > 50) {
+        expensive.push(products[i]);
+    }
+}
+
+// Method 3: forEach
+let result = [];
+products.forEach(product => {
+    if (product.price > 50) {
+        result.push(product);
+    }
+});
+
+// Sort by price (descending)
+let sorted = products.sort((a, b) => b.price - a.price);
+console.log('Sorted by price:', sorted);
+
+// Find most expensive
+let mostExpensive = products.reduce((max, product) => 
+    product.price > max.price ? product : max
+);
+console.log('Most expensive:', mostExpensive);
+
+// Calculate total value of expensive products
+let totalValue = expensiveProducts.reduce((sum, product) => sum + product.price, 0);
+console.log('Total value of expensive products:', totalValue);`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 5: Add Red Border to All Buttons</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Add Red Border to All Buttons</h1>
+    
+    <button>Button 1</button>
+    <button>Button 2</button>
+    <button>Button 3</button>
+    <button>Button 4</button>
+    <br><br>
+    <button onclick="addRedBorders()">Add Red Borders</button>
+    <button onclick="removeBorders()">Remove Borders</button>
+    
+    <script>
+        function addRedBorders() {
+            const allButtons = document.getElementsByTagName('button');
+            
+            Array.from(allButtons).forEach(button => {
+                button.style.border = '3px solid red';
+                button.style.borderRadius = '5px';
+            });
+            
+            console.log('Added red borders to', allButtons.length, 'buttons');
+        }
+        
+        function removeBorders() {
+            const allButtons = document.getElementsByTagName('button');
+            
+            Array.from(allButtons).forEach(button => {
+                button.style.border = '';
+                button.style.borderRadius = '';
+            });
+            
+            console.log('Removed borders from all buttons');
+        }
+    </script>
+</body>
+</html>

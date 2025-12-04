@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 19: Mouseover Image Enlarge</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        img { width: 200px; transition: transform 0.3s; border: 1px solid #ccc; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Mouseover to Enlarge Image</h1>
+    
+    <p>Move your mouse over the image to enlarge it, move out to return to normal.</p>
+    
+    <img id="resizable-image" src="https://images.unsplash.com/photo-1518837695005-2083093ee35b" alt="Sample image">
+    
+    <br><br>
+    <button onclick="addMouseEvents()">Add Mouse Events</button>
+    <button onclick="removeMouseEvents()">Remove Mouse Events</button>
+    
+    <script>
+        function enlargeImage() {
+            const img = document.getElementById('resizable-image');
+            img.style.transform = 'scale(1.5)';
+            console.log('Image enlarged on mouseover');
+        }
+        
+        function resetImage() {
+            const img = document.getElementById('resizable-image');
+            img.style.transform = 'scale(1)';
+            console.log('Image reset on mouseout');
+        }
+        
+        function addMouseEvents() {
+            const img = document.getElementById('resizable-image');
+            img.addEventListener('mouseover', enlargeImage);
+            img.addEventListener('mouseout', resetImage);
+            console.log('Mouse events added to image');
+            alert('Mouse events added! Hover over the image.');
+        }
+        
+        function removeMouseEvents() {
+            const img = document.getElementById('resizable-image');
+            img.removeEventListener('mouseover', enlargeImage);
+            img.removeEventListener('mouseout', resetImage);
+            console.log('Mouse events removed from image');
+            alert('Mouse events removed!');
+        }
+    </script>
+</body>
+</html>

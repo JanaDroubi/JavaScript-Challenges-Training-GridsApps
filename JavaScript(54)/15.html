@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 15: Hide Element with display:none</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 20px; margin: 10px; border: 2px solid red; background-color: #ffe6e6; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Hide Element with display:none</h1>
+    
+    <div id="hide-me">This element will be hidden</div>
+    <p>Other content that remains visible</p>
+    
+    <button onclick="hideElement()">Hide Element</button>
+    <button onclick="showElement()">Show Element</button>
+    
+    <script>
+        function hideElement() {
+            const element = document.getElementById('hide-me');
+            element.style.display = 'none';
+            console.log('Element hidden with display:none');
+        }
+        
+        function showElement() {
+            const element = document.getElementById('hide-me');
+            element.style.display = 'block';
+            console.log('Element shown with display:block');
+        }
+    </script>
+</body>
+</html>

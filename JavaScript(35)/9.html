@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 9: Parse Date from JSON</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #795548; color: white; border: none; }
+        .date-box { padding: 15px; margin: 10px; background: #d7ccc8; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 9: Parse Date from JSON</h1>
+    
+    <div class="code">
+        <p>let json = '{"created":"2024-01-10"}';</p>
+    </div>
+    
+    <p>Parse JSON and convert date string to Date object</p>
+    
+    <button onclick="parseDate()">Parse Date</button>
+    <button onclick="showFormats()">Show Different Formats</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#efebe9;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function parseDate() {
+            let json = '{"created":"2024-01-10"}';
+            let data = JSON.parse(json);
+            let dateStr = data.created;
+            
+            // Create Date object
+            let dateObj = new Date(dateStr);
+            
+            // Format date in different ways
+            let formats = {
+                'ISO String': dateObj.toISOString(),
+                'Locale Date': dateObj.toLocaleDateString(),
+                'Locale String': dateObj.toLocaleString(),
+                'UTC String': dateObj.toUTCString(),
+                'Date Only': dateObj.toDateString(),
+                'Time Only': dateObj.toTimeString()
+            };
+            
+            let result = `<div class="date-box">
+                <strong>Original string:</strong> ${dateStr}<br>
+                <strong>Date object created:</strong> ${dateObj.toString()}
+            </div>
+            <h4>Different Date Formats:</h4>`;
+            
+            for (let format in formats) {
+                result += `<strong>${format}:</strong> ${formats[format]}<br>`;
+            }
+            
+            // Additional date info
+            result += `<h4>Date Components:</h4>
+                Year: ${dateObj.getFullYear()}<br>
+                Month: ${dateObj.getMonth() + 1} (0-indexed: ${dateObj.getMonth()})<br>
+                Day: ${dateObj.getDate()}<br>
+                Day of week: ${dateObj.getDay()} (0=Sunday)<br>
+                Time: ${dateObj.getHours()}:${dateObj.getMinutes()}`;
+            
+            document.getElementById('result').innerHTML = result;
+            
+            console.log('Date string:', dateStr);
+            console.log('Date object:', dateObj);
+            console.log('Timestamp:', dateObj.getTime());
+        }
+        
+        function showFormats() {
+            let dates = [
+                '2024-01-10',
+                '2024-01-10T14:30:00Z',
+                '01/10/2024',
+                'January 10, 2024'
+            ];
+            
+            let result = '<h3>Parsing Different Date Formats:</h3>';
+            
+            dates.forEach(dateStr => {
+                let json = `{"date":"${dateStr}"}`;
+                try {
+                    let data = JSON.parse(json);
+                    let dateObj = new Date(data.date);
+                    result += `<div class="date-box">
+                        <strong>Input:</strong> ${dateStr}<br>
+                        <strong>Parsed:</strong> ${dateObj.toString()}<br>
+                        <strong>Valid:</strong> ${!isNaN(dateObj.getTime()) ? 'Yes' : 'No'}
+                    </div>`;
+                } catch (error) {
+                    result += `<div style="color:red">Error parsing: ${dateStr}</div>`;
+                }
+            });
+            
+            document.getElementById('result').innerHTML = result;
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let json = '{"created":"2024-01-10"}';
+let data = JSON.parse(json);
+let dateStr = data.created;
+
+// Create Date object
+let dateObj = new Date(dateStr);
+
+// Check if date is valid
+if (isNaN(dateObj.getTime())) {
+    console.log('Invalid date');
+} else {
+    console.log('Valid date:', dateObj);
+}
+
+// Different ways to parse dates
+let date1 = new Date('2024-01-10');          // ISO format
+let date2 = new Date('2024-01-10T14:30:00'); // ISO with time
+let date3 = new Date(2024, 0, 10);          // Year, month (0-11), day
+let date4 = new Date(1704835200000);        // Timestamp
+
+// Date formatting methods
+console.log(dateObj.toISOString());      // "2024-01-10T00:00:00.000Z"
+console.log(dateObj.toLocaleDateString()); // "1/10/2024" (locale specific)
+console.log(dateObj.toDateString());     // "Wed Jan 10 2024"
+console.log(dateObj.toUTCString());      // "Wed, 10 Jan 2024 00:00:00 GMT"
+
+// Get date components
+console.log('Year:', dateObj.getFullYear());      // 2024
+console.log('Month:', dateObj.getMonth() + 1);    // 1 (January)
+console.log('Day:', dateObj.getDate());           // 10
+console.log('Day of week:', dateObj.getDay());    // 3 (Wednesday)
+
+// Calculate difference between dates
+let today = new Date();
+let diffTime = Math.abs(today - dateObj);
+let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+console.log(\`Days difference: \${diffDays}\`);`;
+        }
+    </script>
+</body>
+</html>

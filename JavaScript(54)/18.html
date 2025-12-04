@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 18: Click to Change Div Color</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 40px; margin: 20px; border: 2px solid #333; cursor: pointer; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Click Div to Change Its Color</h1>
+    
+    <div id="color-div">Click me to change my color!</div>
+    
+    <button onclick="resetDiv()">Reset Div Color</button>
+    <button onclick="addClickListener()">Add Click Listener</button>
+    <button onclick="removeClickListener()">Remove Click Listener</button>
+    
+    <script>
+        function changeColor() {
+            const div = document.getElementById('color-div');
+            const colors = ['lightblue', 'lightgreen', 'lightcoral', 'lightyellow', 'lightpink'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            div.style.backgroundColor = randomColor;
+            console.log('Div color changed to:', randomColor);
+        }
+        
+        function resetDiv() {
+            const div = document.getElementById('color-div');
+            div.style.backgroundColor = '';
+        }
+        
+        function addClickListener() {
+            const div = document.getElementById('color-div');
+            div.addEventListener('click', changeColor);
+            console.log('Click event listener added to div');
+            alert('Click listener added! Now click the div.');
+        }
+        
+        function removeClickListener() {
+            const div = document.getElementById('color-div');
+            div.removeEventListener('click', changeColor);
+            console.log('Click event listener removed from div');
+            alert('Click listener removed!');
+        }
+    </script>
+</body>
+</html>

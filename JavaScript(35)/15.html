@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 15: Dates in JSON</title></head>
+<body>
+<h1>Convert Object with Date to JSON</h1>
+<button onclick="convertDate()">Convert Date Object</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function convertDate() {
+    let event = {
+        name: "Meeting",
+        date: new Date(),
+        created: new Date('2024-01-10')
+    };
+    
+    let json = JSON.stringify(event);
+    let parsed = JSON.parse(json);
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>Original object:</strong><br>
+         Date: ${event.date}<br>
+         Date type: ${typeof event.date}<br><br>
+         <strong>JSON string:</strong> ${json}<br><br>
+         <strong>After parsing:</strong><br>
+         Date string: ${parsed.date}<br>
+         Date type after parse: ${typeof parsed.date}<br>
+         Is valid date? ${!isNaN(new Date(parsed.date).getTime())}`;
+    
+    console.log('Original date:', event.date);
+    console.log('JSON:', json);
+    console.log('Parsed date string:', parsed.date);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let obj = {date: new Date()};
+let json = JSON.stringify(obj);
+console.log(json); // '{"date":"2024-01-10T10:30:00.000Z"}'
+// Dates become ISO strings in JSON
+
+let parsed = JSON.parse(json);
+console.log(parsed.date); // "2024-01-10T10:30:00.000Z" (string)
+console.log(typeof parsed.date); // "string"
+
+// Convert back to Date object
+let dateObj = new Date(parsed.date);
+console.log(dateObj); // Date object
+console.log(dateObj.getFullYear()); // 2024
+
+// Custom date handling
+let customJson = JSON.stringify(obj, (key, value) => {
+    if (value instanceof Date) {
+        return value.toLocaleDateString(); // Custom format
+    }
+    return value;
+});
+console.log(customJson); // '{"date":"1/10/2024"}'`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

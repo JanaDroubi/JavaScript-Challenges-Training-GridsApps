@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 2: Parse JSON Array</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #2196F3; color: white; border: none; }
+        li { margin: 5px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 2: Parse Students Array</h1>
+    
+    <div class="code">
+        <p>let studentsJSON = '[{"name":"Ali"}, {"name":"Lina"}]';</p>
+    </div>
+    
+    <p>Parse JSON array and print each student name</p>
+    
+    <button onclick="parseStudents()">Parse Array</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#e3f2fd;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function parseStudents() {
+            let studentsJSON = '[{"name":"Ali"}, {"name":"Lina"}]';
+            let students = JSON.parse(studentsJSON);
+            
+            let result = '<h3>Student Names:</h3><ul>';
+            students.forEach((student, index) => {
+                result += `<li>Student ${index + 1}: ${student.name}</li>`;
+            });
+            result += '</ul>';
+            
+            document.getElementById('result').innerHTML = result;
+            
+            console.log('Students array:', students);
+            students.forEach((student, i) => {
+                console.log(`Student ${i + 1}:`, student.name);
+            });
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let studentsJSON = '[{"name":"Ali"}, {"name":"Lina"}]';
+let students = JSON.parse(studentsJSON);
+
+// Method 1: forEach
+students.forEach((student, index) => {
+    console.log(\`Student \${index + 1}: \${student.name}\`);
+});
+
+// Method 2: for loop
+for (let i = 0; i < students.length; i++) {
+    console.log(students[i].name);
+}`;
+        }
+    </script>
+</body>
+</html>

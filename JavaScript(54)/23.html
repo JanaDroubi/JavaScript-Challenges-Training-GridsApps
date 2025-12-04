@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 23: Button Disables After First Click</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Button Disables Itself After First Click</h1>
+    
+    <p>Click the button below - it will disable itself after the first click.</p>
+    
+    <button id="self-disable-button">Click Me (I'll disable myself)</button>
+    <button onclick="resetButton()">Reset Button</button>
+    
+    <script>
+        function handleButtonClick() {
+            const button = document.getElementById('self-disable-button');
+            
+            // Disable the button
+            button.disabled = true;
+            button.textContent = "I'm disabled now";
+            button.style.backgroundColor = '#cccccc';
+            button.style.color = '#666666';
+            
+            console.log('Button clicked and disabled');
+            alert('Button clicked! Now it\'s disabled.');
+        }
+        
+        // Add event listener when page loads
+        window.onload = function() {
+            const button = document.getElementById('self-disable-button');
+            button.addEventListener('click', handleButtonClick);
+            console.log('Self-disable listener added to button');
+        };
+        
+        function resetButton() {
+            const button = document.getElementById('self-disable-button');
+            button.disabled = false;
+            button.textContent = "Click Me (I'll disable myself)";
+            button.style.backgroundColor = '';
+            button.style.color = '';
+            console.log('Button reset');
+        }
+    </script>
+</body>
+</html>

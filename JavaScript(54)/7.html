@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 7: Select by Attribute Selector</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 10px; margin: 10px; border: 1px solid #ccc; }
+        .selected { background-color: lightgreen; border: 2px solid green; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Select Element by Attribute Selector</h1>
+    
+    <div data-id="1">Element with data-id="1"</div>
+    <div data-id="2">Element with data-id="2"</div>
+    <div data-id="5">Element with data-id="5"</div>
+    <div data-id="3">Element with data-id="3"</div>
+    <div data-id="5">Another element with data-id="5"</div>
+    <div data-id="4">Element with data-id="4"</div>
+    
+    <button onclick="selectById5()">Select data-id="5"</button>
+    <button onclick="resetSelection()">Reset Selection</button>
+    
+    <script>
+        function selectById5() {
+            // Using attribute selector to find elements with data-id="5"
+            const elements = document.querySelectorAll('[data-id="5"]');
+            
+            elements.forEach(element => {
+                element.classList.add('selected');
+            });
+            
+            console.log('Found', elements.length, 'element(s) with data-id="5"');
+        }
+        
+        function resetSelection() {
+            const allDivs = document.querySelectorAll('div');
+            allDivs.forEach(div => div.classList.remove('selected'));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 4: Get Input Value</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get Input Field Value</h1>
+    
+    <label for="username">Username:</label>
+    <input type="text" id="username" value="JohnDoe123">
+    
+    <br><br>
+    
+    <button onclick="printUsername()">Print Username to Console</button>
+    <button onclick="changeUsername()">Change Username</button>
+    
+    <script>
+        function printUsername() {
+            const usernameInput = document.getElementById('username');
+            const currentValue = usernameInput.value;
+            
+            console.log('Current username value:', currentValue);
+            alert('Username: ' + currentValue + '\n(Check console for details)');
+        }
+        
+        function changeUsername() {
+            const usernameInput = document.getElementById('username');
+            const newUsername = prompt('Enter new username:');
+            
+            if (newUsername) {
+                usernameInput.value = newUsername;
+                console.log('Username changed to:', newUsername);
+            }
+        }
+    </script>
+</body>
+</html>

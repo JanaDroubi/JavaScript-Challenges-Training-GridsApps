@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 11: Basic JSON.stringify</title></head>
+<body>
+<h1>Convert Object to JSON</h1>
+<div>let user = {name: "Mona", age: 28};</div>
+<button onclick="convert()">Convert to JSON</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function convert() {
+    let user = {name: "Mona", age: 28};
+    let json = JSON.stringify(user);
+    document.getElementById('result').innerHTML = 
+        `<strong>JSON:</strong> ${json}<br>
+         <strong>Type:</strong> ${typeof json}`;
+    console.log('Original object:', user);
+    console.log('JSON string:', json);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let user = {name: "Mona", age: 28};
+let json = JSON.stringify(user);
+console.log(json); // '{"name":"Mona","age":28}'
+console.log(typeof json); // "string"`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

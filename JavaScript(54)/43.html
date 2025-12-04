@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 43: Highlight Selected LI</title>
+<style>
+    body { font-family: Arial; padding: 20px; }
+    ul { list-style-type: none; padding: 0; }
+    li {
+        padding: 15px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .highlight {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #45a049;
+        transform: scale(1.02);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    button { margin: 10px; padding: 10px; }
+</style>
+</head>
+<body>
+    <h1>Highlight Selected List Item</h1>
+    
+    <p>Click any list item to highlight it. Only one can be highlighted at a time.</p>
+    
+    <ul id="selectable-list">
+        <li>List Item 1 - Click me</li>
+        <li>List Item 2 - Click me</li>
+        <li>List Item 3 - Click me</li>
+        <li>List Item 4 - Click me</li>
+        <li>List Item 5 - Click me</li>
+    </ul>
+    
+    <div id="selection-info" style="margin: 20px 0; padding: 10px; background-color: #f0f0f0;"></div>
+    
+    <button onclick="addSelectionListeners()">Enable Selection</button>
+    <button onclick="clearSelection()">Clear Selection</button>
+    <button onclick="getSelectedItem()">Get Selected Item</button>
+    
+    <script>
+        let selectedItem = null;
+        
+        function handleItemClick(event) {
+            // Remove highlight from previously selected item
+            if (selectedItem) {
+                selectedItem.classList.remove('highlight');
+            }
+            
+            // Add highlight to clicked item
+            event.target.classList.add('highlight');
+            selectedItem = event.target;
+            
+            // Update selection info
+            const infoDiv = document.getElementById('selection-info');
+            infoDiv.innerHTML = `
+                <strong>Selected:</strong> ${event.target.textContent}<br>
+                <strong>Index:</strong> ${Array.from(event.target.parentNode.children).indexOf(event.target)}
+            `;
+            
+            console.log('Selected item:', event.target.textContent);
+        }
+        
+        function addSelectionListeners() {
+            const listItems = document.querySelectorAll('#selectable-list li');
+            
+            listItems.forEach(item => {
+                item.addEventListener('click', handleItemClick);
+            });
+            
+            console.log('Selection listeners added to all list items');
+            alert('Selection enabled! Click any list item to highlight it.');
+        }
+        
+        function clearSelection() {
+            if (selectedItem) {
+                selectedItem.classList.remove('highlight');
+                selectedItem = null;
+            }
+            
+            document.getElementById('selection-info').innerHTML = '';
+            console.log('Selection cleared');
+        }
+        
+        function getSelectedItem() {
+            if (selectedItem) {
+                alert('Selected item: ' + selectedItem.textContent);
+            } else {
+                alert('No item selected');
+            }
+        }
+        
+        // Add listeners on page load
+        window.onload = addSelectionListeners;
+    </script>
+</body>
+</html>

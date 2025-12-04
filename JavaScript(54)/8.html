@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 8: Check Tag Name</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 10px; margin: 10px; border: 1px solid #ccc; }
+        .checked { background-color: #e0f7fa; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Check Tag Name of Elements</h1>
+    
+    <div id="element1">This is a DIV element</div>
+    <p id="element2">This is a P element</p>
+    <button id="element3">This is a BUTTON element</button>
+    <span id="element4">This is a SPAN element</span>
+    <input type="text" id="element5" value="This is an INPUT element">
+    
+    <br><br>
+    <button onclick="checkTagNames()">Check All Tag Names</button>
+    <button onclick="checkSpecific()">Check H1 Tag Name</button>
+    <button onclick="resetCheck()">Reset</button>
+    
+    <script>
+        function checkTagNames() {
+            const elements = [
+                document.getElementById('element1'),
+                document.getElementById('element2'),
+                document.getElementById('element3'),
+                document.getElementById('element4'),
+                document.getElementById('element5')
+            ];
+            
+            elements.forEach(element => {
+                element.classList.add('checked');
+                console.log(element.id, 'tag name:', element.tagName);
+            });
+        }
+        
+        function checkSpecific() {
+            const h1 = document.querySelector('h1');
+            alert('H1 tag name: ' + h1.tagName);
+            console.log('H1 tag name:', h1.tagName);
+        }
+        
+        function resetCheck() {
+            const allElements = document.querySelectorAll('#element1, #element2, #element3, #element4, #element5');
+            allElements.forEach(element => element.classList.remove('checked'));
+        }
+    </script>
+</body>
+</html>

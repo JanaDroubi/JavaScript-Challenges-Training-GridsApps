@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 37: Prepend Element to Container</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        #container { border: 2px solid #333; padding: 20px; margin: 10px; }
+        .prepended { background-color: lightblue; border: 2px solid blue; padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Prepend Element to Beginning of Container</h1>
+    
+    <div id="container">
+        <div>Original item 1</div>
+        <div>Original item 2</div>
+        <div>Original item 3</div>
+    </div>
+    
+    <button onclick="prependElement()">Prepend New Element</button>
+    <button onclick="resetContainer()">Reset Container</button>
+    
+    <script>
+        let prependCount = 0;
+        
+        function prependElement() {
+            prependCount++;
+            
+            // Create new element
+            const newElement = document.createElement('div');
+            newElement.className = 'prepended';
+            newElement.textContent = 'Prepended Item ' + prependCount + ' (added at beginning)';
+            
+            // Get container
+            const container = document.getElementById('container');
+            
+            // Prepend to container (add at beginning)
+            container.prepend(newElement);
+            
+            console.log('Prepended new element to container:', newElement);
+            console.log('Container now has', container.children.length, 'children');
+            
+            // Remove prepended class after 3 seconds
+            setTimeout(() => {
+                newElement.classList.remove('prepended');
+            }, 3000);
+        }
+        
+        function resetContainer() {
+            const container = document.getElementById('container');
+            container.innerHTML = `
+                <div>Original item 1</div>
+                <div>Original item 2</div>
+                <div>Original item 3</div>
+            `;
+            prependCount = 0;
+            console.log('Container reset to original state');
+        }
+    </script>
+</body>
+</html>

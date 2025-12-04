@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            background: #ecf0f1;
+            min-height: 120px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌡 Temperature Converter</h1>
+            <p>Celsius ↔ Fahrenheit with input guard and console logs</p>
+        </header>
+
+        <div class="form-group">
+            <label for="tempInput">Temperature:</label>
+            <input type="text" id="tempInput" placeholder="Enter a number">
+        </div>
+
+        <div class="form-group">
+            <label for="scaleSelect">Convert to:</label>
+            <select id="scaleSelect">
+                <option value="C">Celsius</option>
+                <option value="F">Fahrenheit</option>
+            </select>
+        </div>
+
+        <button onclick="convertTemperature()">Convert</button>
+
+        <div class="output" id="outputArea">Converted temperature will appear here...</div>
+    </div>
+
+    <script>
+        const projectName = "Temperature Converter";
+
+        function convertTemperature() {
+            const input = document.getElementById('tempInput').value.trim();
+            const scale = document.getElementById('scaleSelect').value;
+            const outputArea = document.getElementById('outputArea');
+
+            // Input guard
+            if(input === "" || isNaN(input)) {
+                outputArea.textContent = "❌ Please enter a valid number!";
+                console.log("Invalid input:", input, "Type:", typeof input);
+                return;
+            }
+
+            let temp = parseFloat(input); // Convert to number
+            let result, message;
+
+            // Conversion
+            if(scale === "C") {
+                result = ((temp - 32) * 5/9).toFixed(2);
+                message = `${temp}°F = ${result}°C`;
+            } else {
+                result = ((temp * 9/5) + 32).toFixed(2);
+                message = `${temp}°C = ${result}°F`;
+            }
+
+            // Logical check examples
+            const isAboveFreezing = result > 0;
+            const comparisonMsg = `Logical Check: ${isAboveFreezing ? "Above freezing" : "Freezing or below"}`;
+
+            // String building example
+            const fullMessage = `=== ${projectName} ===\nInput: ${temp}\nScale: ${scale}\nResult: ${result}\n${comparisonMsg}`;
+
+            // Output
+            outputArea.textContent = fullMessage;
+
+            // Console logs
+            console.log(fullMessage);
+            console.log("Input Type:", typeof temp, "Result Type:", typeof result);
+            console.log("Operators examples:");
+            console.log(`${temp} + 10 =`, temp + 10);
+            console.log(`${temp} > 100?`, temp > 100);
+            console.log(`${temp} is number?`, typeof temp === "number");
+        }
+    </script>
+</body>
+</html>

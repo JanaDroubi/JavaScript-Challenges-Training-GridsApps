@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 19: User with Tasks Array</title></head>
+<body>
+<h1>Convert User Object with Tasks Array</h1>
+<button onclick="createUser()">Create User & Convert</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function createUser() {
+    let user = {
+        id: 101,
+        name: "Sarah Johnson",
+        email: "sarah@example.com",
+        profile: {
+            age: 28,
+            location: "New York",
+            bio: "Web developer passionate about JavaScript"
+        },
+        tasks: [
+            {id: 1, title: "Complete project", completed: false, priority: "high"},
+            {id: 2, title: "Write documentation", completed: true, priority: "medium"},
+            {id: 3, title: "Fix bugs", completed: false, priority: "high"},
+            {id: 4, title: "Team meeting", completed: false, priority: "low"}
+        ],
+        settings: {
+            notifications: true,
+            theme: "dark",
+            language: "en"
+        },
+        createdAt: new Date(),
+        active: true
+    };
+    
+    // Calculate stats
+    user.taskStats = {
+        total: user.tasks.length,
+        completed: user.tasks.filter(t => t.completed).length,
+        pending: user.tasks.filter(t => !t.completed).length
+    };
+    
+    let json = JSON.stringify(user, null, 2);
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>User Object:</strong><br>
+         Name: ${user.name}<br>
+         Email: ${user.email}<br>
+         Tasks: ${user.tasks.length} (${user.taskStats.completed} completed)<br>
+         Created: ${user.createdAt.toLocaleDateString()}<br><br>
+         <strong>JSON String:</strong><br>
+         Length: ${json.length} characters<br>
+         <pre style="background:#e8e8e8; padding:10px; max-height:200px; overflow:auto;">${json.substring(0, 500)}...</pre>`;
+    
+    console.log('User object:', user);
+    console.log('JSON length:', json.length);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let user = {
+    id: 101,
+    name: "Sarah",
+    tasks: [
+        {id: 1, title: "Task 1", completed: false},
+        {id: 2, title: "Task 2", completed: true}
+    ],
+    profile: {
+        age: 28,
+        bio: "Developer"
+    }
+};
+
+// Stringify entire object
+let json = JSON.stringify(user);
+console.log('Complete JSON:', json);
+
+// Stringify with formatting
+let prettyJson = JSON.stringify(user, null, 2);
+console.log('Formatted JSON:', prettyJson);
+
+// Stringify only specific parts
+let tasksJson = JSON.stringify(user.tasks);
+console.log('Just tasks:', tasksJson);
+
+// Nested objects and arrays are fully serialized
+let fullJson = JSON.stringify(user);
+let parsed = JSON.parse(fullJson);
+console.log('Parsed name:', parsed.name); // "Sarah"
+console.log('Parsed tasks count:', parsed.tasks.length); // 2
+
+// Note: All nested structures are preserved`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

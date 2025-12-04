@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 30: Get Previous Sibling</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        p { padding: 15px; margin: 5px; }
+        .target { background-color: lightblue; border: 2px solid blue; }
+        .previous { background-color: lightcoral; border: 2px solid red; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get Previous Sibling of Paragraph</h1>
+    
+    <div>This is a div (before first paragraph)</div>
+    <p>First paragraph</p>
+    <p id="target-paragraph">Second paragraph (THIS IS THE TARGET)</p>
+    <p>Third paragraph</p>
+    <p>Fourth paragraph</p>
+    <div>This is a div (after last paragraph)</div>
+    
+    <button onclick="getPreviousSibling()">Get Previous Sibling</button>
+    <button onclick="resetAll()">Reset All</button>
+    
+    <script>
+        function getPreviousSibling() {
+            const target = document.getElementById('target-paragraph');
+            
+            // Clear previous highlights
+            const allElements = document.querySelectorAll('p, div');
+            allElements.forEach(el => {
+                el.classList.remove('target');
+                el.classList.remove('previous');
+            });
+            
+            // Highlight target
+            target.classList.add('target');
+            
+            // Get previous sibling
+            const previousSibling = target.previousElementSibling;
+            
+            if (previousSibling) {
+                previousSibling.classList.add('previous');
+                console.log('Target paragraph:', target.textContent);
+                console.log('Previous sibling:', previousSibling.textContent);
+                console.log('Previous sibling tag:', previousSibling.tagName);
+                
+                alert('Target: ' + target.textContent + 
+                      '\nPrevious sibling: ' + previousSibling.textContent +
+                      '\nTag: ' + previousSibling.tagName);
+            } else {
+                console.log('No previous sibling available');
+                alert('No previous sibling found');
+            }
+        }
+        
+        function resetAll() {
+            const allElements = document.querySelectorAll('p, div');
+            allElements.forEach(el => {
+                el.classList.remove('target');
+                el.classList.remove('previous');
+            });
+        }
+    </script>
+</body>
+</html>

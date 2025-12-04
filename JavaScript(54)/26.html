@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 26: Detect Enter Key Press</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; }
+        div { border: 1px solid #ccc; padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Detect Enter Key Press</h1>
+    
+    <p>Type in the input field and press Enter key to trigger the function.</p>
+    
+    <input type="text" id="enter-input" placeholder="Type and press Enter...">
+    
+    <div id="enter-result">Press Enter in the input above</div>
+    
+    <br>
+    <button onclick="addEnterListener()">Add Enter Key Listener</button>
+    <button onclick="removeEnterListener()">Remove Enter Key Listener</button>
+    <button onclick="clearEnterResult()">Clear Result</button>
+    
+    <script>
+        function handleEnterKey(event) {
+            // Check if Enter key was pressed (keyCode 13 or key 'Enter')
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                const inputText = event.target.value;
+                
+                console.log('Enter key pressed with text:', inputText);
+                
+                const resultDiv = document.getElementById('enter-result');
+                resultDiv.innerHTML = `<strong>Enter pressed!</strong> You typed: "${inputText}"`;
+                resultDiv.style.backgroundColor = '#e3f2fd';
+                
+                // Clear input
+                event.target.value = '';
+            }
+        }
+        
+        function addEnterListener() {
+            const input = document.getElementById('enter-input');
+            input.addEventListener('keydown', handleEnterKey);
+            console.log('Enter key listener added to input');
+            alert('Enter key listener added! Try pressing Enter in the input.');
+        }
+        
+        function removeEnterListener() {
+            const input = document.getElementById('enter-input');
+            input.removeEventListener('keydown', handleEnterKey);
+            console.log('Enter key listener removed from input');
+            alert('Enter key listener removed!');
+        }
+        
+        function clearEnterResult() {
+            document.getElementById('enter-result').textContent = 'Press Enter in the input above';
+            document.getElementById('enter-result').style.backgroundColor = '';
+        }
+    </script>
+</body>
+</html>

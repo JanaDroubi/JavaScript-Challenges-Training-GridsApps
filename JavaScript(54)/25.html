@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 25: Log Clicked Element with event.target</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 20px; margin: 10px; border: 1px solid #ccc; cursor: pointer; }
+        button { margin: 10px; padding: 10px; }
+        .clicked { background-color: lightyellow; }
+    </style>
+</head>
+<body>
+    <h1>Log Which Element Was Clicked with event.target</h1>
+    
+    <p>Click anywhere in the colored boxes below and check the console.</p>
+    
+    <div id="box1" style="background-color: #e0f7fa;">Box 1 - Click me</div>
+    <div id="box2" style="background-color: #f1f8e9;">Box 2 - Click me</div>
+    <div id="box3" style="background-color: #fff3e0;">Box 3 - Click me</div>
+    
+    <p>Regular paragraph - also clickable</p>
+    <button>A button - also clickable</button>
+    
+    <br><br>
+    <button onclick="addGlobalClickListener()">Add Global Click Listener</button>
+    <button onclick="removeGlobalClickListener()">Remove Global Click Listener</button>
+    <button onclick="clearHighlights()">Clear Highlights</button>
+    
+    <script>
+        function handleGlobalClick(event) {
+            // Log information about the clicked element
+            console.log('Clicked element:', event.target);
+            console.log('Element ID:', event.target.id || 'no id');
+            console.log('Element class:', event.target.className || 'no class');
+            console.log('Element tag:', event.target.tagName);
+            console.log('Element text:', event.target.textContent.substring(0, 50) + '...');
+            console.log('---');
+            
+            // Visual feedback
+            event.target.classList.add('clicked');
+            
+            // Remove highlight after 1 second
+            setTimeout(() => {
+                event.target.classList.remove('clicked');
+            }, 1000);
+        }
+        
+        function addGlobalClickListener() {
+            document.addEventListener('click', handleGlobalClick);
+            console.log('Global click listener added to document');
+            alert('Global click listener added! Click anywhere.');
+        }
+        
+        function removeGlobalClickListener() {
+            document.removeEventListener('click', handleGlobalClick);
+            console.log('Global click listener removed');
+            alert('Global click listener removed!');
+        }
+        
+        function clearHighlights() {
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(el => el.classList.remove('clicked'));
+        }
+    </script>
+</body>
+</html>

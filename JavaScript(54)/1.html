@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 1: Select h1 with 3 Selectors</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        h1 { color: #333; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1 id="main-title">DOM Selectors Challenge 1</h1>
+    <p>This page demonstrates 3 ways to select the h1 element.</p>
+    
+    <button onclick="selectById()">Select by ID</button>
+    <button onclick="selectByQuery()">Select by Query</button>
+    <button onclick="selectByTag()">Select by Tag</button>
+    
+    <script>
+        function selectById() {
+            const h1 = document.getElementById('main-title');
+            console.log('Method 1 (getElementById):', h1.textContent);
+            alert('Check console for: ' + h1.textContent);
+        }
+        
+        function selectByQuery() {
+            const h1 = document.querySelector('#main-title');
+            console.log('Method 2 (querySelector):', h1.textContent);
+            alert('Check console for: ' + h1.textContent);
+        }
+        
+        function selectByTag() {
+            const h1 = document.getElementsByTagName('h1')[0];
+            console.log('Method 3 (getElementsByTagName):', h1.textContent);
+            alert('Check console for: ' + h1.textContent);
+        }
+    </script>
+</body>
+</html>

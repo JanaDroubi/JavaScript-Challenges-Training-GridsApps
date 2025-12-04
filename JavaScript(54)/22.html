@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 22: Click LI to Change Background</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 15px; margin: 5px; border: 1px solid #ccc; cursor: pointer; }
+        .selected { background-color: lightblue; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Click LI to Change Its Background</h1>
+    
+    <p>Click on any list item below to change only that item's background.</p>
+    
+    <ul id="my-list">
+        <li>List Item 1 - Click me</li>
+        <li>List Item 2 - Click me</li>
+        <li>List Item 3 - Click me</li>
+        <li>List Item 4 - Click me</li>
+        <li>List Item 5 - Click me</li>
+    </ul>
+    
+    <button onclick="addLiClickListeners()">Add Click Listeners</button>
+    <button onclick="removeLiClickListeners()">Remove Click Listeners</button>
+    <button onclick="clearSelection()">Clear All Selection</button>
+    
+    <script>
+        function handleLiClick(event) {
+            // Remove 'selected' class from all LIs
+            const allLis = document.querySelectorAll('#my-list li');
+            allLis.forEach(li => li.classList.remove('selected'));
+            
+            // Add 'selected' class to clicked LI only
+            event.target.classList.add('selected');
+            console.log('Selected:', event.target.textContent);
+        }
+        
+        function addLiClickListeners() {
+            const allLis = document.querySelectorAll('#my-list li');
+            allLis.forEach(li => {
+                li.addEventListener('click', handleLiClick);
+            });
+            console.log('Click listeners added to all LIs');
+            alert('Click listeners added! Click any list item.');
+        }
+        
+        function removeLiClickListeners() {
+            const allLis = document.querySelectorAll('#my-list li');
+            allLis.forEach(li => {
+                li.removeEventListener('click', handleLiClick);
+            });
+            console.log('Click listeners removed from all LIs');
+            alert('Click listeners removed!');
+        }
+        
+        function clearSelection() {
+            const allLis = document.querySelectorAll('#my-list li');
+            allLis.forEach(li => li.classList.remove('selected'));
+        }
+    </script>
+</body>
+</html>

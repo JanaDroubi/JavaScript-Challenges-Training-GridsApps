@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 31: Get Parent and Children in Event</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { border: 2px solid purple; padding: 20px; margin: 10px; }
+        li { padding: 10px; margin: 5px; border: 1px solid #ccc; cursor: pointer; }
+        .clicked { background-color: lavender; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get Clicked Item's Parent and Its Children</h1>
+    
+    <ul id="parent-list">
+        <li>List Item 1 - Click me</li>
+        <li>List Item 2 - Click me</li>
+        <li>List Item 3 - Click me</li>
+        <li>List Item 4 - Click me</li>
+    </ul>
+    
+    <button onclick="addClickListeners()">Add Click Listeners</button>
+    <button onclick="removeClickListeners()">Remove Click Listeners</button>
+    
+    <script>
+        function handleListItemClick(event) {
+            // Clear previous highlights
+            const allItems = document.querySelectorAll('#parent-list li');
+            allItems.forEach(item => item.classList.remove('clicked'));
+            
+            // Highlight clicked item
+            event.target.classList.add('clicked');
+            
+            // Get parent element
+            const parent = event.target.parentElement;
+            
+            // Get all children of parent
+            const children = parent.children;
+            
+            // Log information
+            console.log('=== Clicked Item Info ===');
+            console.log('Clicked item:', event.target.textContent);
+            console.log('Parent element:', parent.tagName, '(id:', parent.id + ')');
+            console.log('Number of children in parent:', children.length);
+            
+            console.log('All children:');
+            for (let i = 0; i < children.length; i++) {
+                console.log('  Child ' + i + ':', children[i].textContent);
+            }
+            
+            alert('Clicked: ' + event.target.textContent + 
+                  '\nParent: ' + parent.tagName + 
+                  '\nChildren count: ' + children.length + 
+                  '\nCheck console for details');
+        }
+        
+        function addClickListeners() {
+            const allItems = document.querySelectorAll('#parent-list li');
+            allItems.forEach(item => {
+                item.addEventListener('click', handleListItemClick);
+            });
+            console.log('Click listeners added to all list items');
+            alert('Click listeners added! Click any list item.');
+        }
+        
+        function removeClickListeners() {
+            const allItems = document.querySelectorAll('#parent-list li');
+            allItems.forEach(item => {
+                item.removeEventListener('click', handleListItemClick);
+            });
+            console.log('Click listeners removed from all list items');
+            alert('Click listeners removed!');
+        }
+    </script>
+</body>
+</html>

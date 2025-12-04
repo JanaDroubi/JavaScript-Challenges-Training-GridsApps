@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 16: Set Attribute Dynamically</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        img { border: 1px solid #ccc; margin: 10px; max-width: 300px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Set Image Source Attribute Dynamically</h1>
+    
+    <img id="dynamic-image" src="placeholder.jpg" alt="Dynamic image">
+    
+    <br><br>
+    <button onclick="changeImage1()">Load Image 1</button>
+    <button onclick="changeImage2()">Load Image 2</button>
+    <button onclick="resetImage()">Reset to Placeholder</button>
+    
+    <script>
+        function changeImage1() {
+            const img = document.getElementById('dynamic-image');
+            img.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+            img.alt = "Mountain landscape";
+            console.log('Changed image src to mountain landscape');
+        }
+        
+        function changeImage2() {
+            const img = document.getElementById('dynamic-image');
+            img.src = "https://images.unsplash.com/photo-1519681393784-d120267933ba";
+            img.alt = "Night sky";
+            console.log('Changed image src to night sky');
+        }
+        
+        function resetImage() {
+            const img = document.getElementById('dynamic-image');
+            img.src = "placeholder.jpg";
+            img.alt = "Dynamic image";
+            console.log('Reset image to placeholder');
+        }
+    </script>
+</body>
+</html>

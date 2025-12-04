@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 14: Toggle Class</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 20px; margin: 10px; border: 1px solid #ccc; }
+        .highlight { background-color: lightblue; border: 3px solid blue; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Toggle a Class on Element</h1>
+    
+    <div id="toggle-element">Click button to toggle highlight class</div>
+    
+    <button onclick="toggleHighlight()">Toggle Highlight Class</button>
+    <button onclick="checkClassStatus()">Check Class Status</button>
+    
+    <script>
+        function toggleHighlight() {
+            const element = document.getElementById('toggle-element');
+            element.classList.toggle('highlight');
+            
+            const hasClass = element.classList.contains('highlight');
+            console.log('Highlight class is now:', hasClass ? 'ON' : 'OFF');
+        }
+        
+        function checkClassStatus() {
+            const element = document.getElementById('toggle-element');
+            const hasClass = element.classList.contains('highlight');
+            alert('Highlight class is ' + (hasClass ? 'ON' : 'OFF'));
+        }
+    </script>
+</body>
+</html>

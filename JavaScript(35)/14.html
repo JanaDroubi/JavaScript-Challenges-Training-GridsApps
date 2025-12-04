@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 14: Replacer Function</title></head>
+<body>
+<h1>Use Replacer to Ignore Password</h1>
+<div>let user = {username:"admin", password:"1234", email:"admin@test.com"};</div>
+<button onclick="stringifyWithReplacer()">Stringify without Password</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function stringifyWithReplacer() {
+    let user = {username:"admin", password:"1234", email:"admin@test.com"};
+    
+    // Replacer function
+    function replacer(key, value) {
+        if (key === 'password') return undefined; // Exclude password
+        return value;
+    }
+    
+    let json = JSON.stringify(user, replacer);
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>Original object:</strong> ${JSON.stringify(user)}<br>
+         <strong>Without password:</strong> ${json}<br>
+         <strong>Password excluded:</strong> ${json.includes('password') ? 'No' : 'Yes'}`;
+    
+    console.log('Original:', user);
+    console.log('Without password:', json);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let user = {username:"admin", password:"1234", email:"admin@test.com"};
+
+// Method 1: Replacer function
+function replacer(key, value) {
+    if (key === 'password') return undefined;
+    return value;
+}
+let json1 = JSON.stringify(user, replacer);
+console.log(json1); // '{"username":"admin","email":"admin@test.com"}'
+
+// Method 2: Array of properties to include
+let json2 = JSON.stringify(user, ['username', 'email']);
+console.log(json2); // '{"username":"admin","email":"admin@test.com"}'
+
+// Method 3: Using delete (modifies original)
+delete user.password;
+let json3 = JSON.stringify(user);
+console.log(json3); // '{"username":"admin","email":"admin@test.com"}'`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

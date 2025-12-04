@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 46: Dynamic Table from JS Data</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        button { margin: 10px; padding: 10px; }
+        .controls { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Table from JavaScript Data</h1>
+    
+    <div class="controls">
+        <button onclick="createTable()">Create Table</button>
+        <button onclick="sortTable('name')">Sort by Name</button>
+        <button onclick="sortTable('age')">Sort by Age</button>
+        <button onclick="sortTable('department')">Sort by Department</button>
+        <button onclick="clearTable()">Clear Table</button>
+    </div>
+    
+    <div id="table-container"></div>
+    
+    <script>
+        // Sample data
+        const employees = [
+            { id: 1, name: "John Smith", age: 32, department: "Engineering", salary: 75000 },
+            { id: 2, name: "Sarah Johnson", age: 28, department: "Marketing", salary: 65000 },
+            { id: 3, name: "Michael Brown", age: 45, department: "Sales", salary: 85000 },
+            { id: 4, name: "Emily Davis", age: 29, department: "Engineering", salary: 72000 },
+            { id: 5, name: "David Wilson", age: 38, department: "HR", salary: 60000 },
+            { id: 6, name: "Lisa Anderson", age: 31, department: "Marketing", salary: 68000 },
+            { id: 7, name: "Robert Taylor", age: 42, department: "Sales", salary: 90000 },
+            { id: 8, name: "Jennifer Lee", age: 26, department: "Engineering", salary: 70000 }
+        ];
+        
+        let currentSort = { column: null, ascending: true };
+        
+        function createTable() {
+            const container = document.getElementById('table-container');
+            
+            // Create table element
+            const table = document.createElement('table');
+            table.id = 'employee-table';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            const headers = ['ID', 'Name', 'Age', 'Department', 'Salary', 'Actions'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                if (headerText !== 'Actions') {
+                    th.onclick = () => sortTable(headerText.toLowerCase());
+                }
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                
+                // ID cell
+                const idCell = document.createElement('td');
+                idCell.textContent = employee.id;
+                row.appendChild(idCell);
+                
+                // Name cell
+                const nameCell = document.createElement('td');
+                nameCell.textContent = employee.name;
+                row.appendChild(nameCell);
+                
+                // Age cell
+                const ageCell = document.createElement('td');
+                ageCell.textContent = employee.age;
+                row.appendChild(ageCell);
+                
+                // Department cell
+                const deptCell = document.createElement('td');
+                deptCell.textContent = employee.department;
+                row.appendChild(deptCell);
+                
+                // Salary cell
+                const salaryCell = document.createElement('td');
+                salaryCell.textContent = '$' + employee.salary.toLocaleString();
+                row.appendChild(salaryCell);
+                
+                // Actions cell
+                const actionsCell = document.createElement('td');
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.style.padding = '5px 10px';
+                deleteBtn.style.margin = '0 5px';
+                deleteBtn.style.backgroundColor = '#ff6b6b';
+                deleteBtn.style.color = 'white';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.borderRadius = '3px';
+                deleteBtn.onclick = () => deleteRow(row, employee.id);
+                
+                const detailsBtn = document.createElement('button');
+                detailsBtn.textContent = 'Details';
+                detailsBtn.style.padding = '5px 10px';
+                detailsBtn.style.margin = '0 5px';
+                detailsBtn.onclick = () => showDetails(employee);
+                
+                actionsCell.appendChild(detailsBtn);
+                actionsCell.appendChild(deleteBtn);
+                row.appendChild(actionsCell);
+                
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            container.innerHTML = '';
+            container.appendChild(table);
+            
+            console.log('Table created with', employees.length, 'rows');
+        }
+        
+        function sortTable(column) {
+            // Map column names to object properties
+            const columnMap = {
+                'id': 'id',
+                'name': 'name',
+                'age': 'age',
+                'department': 'department',
+                'salary': 'salary'
+            };
+            
+            const property = columnMap[column];
+            if (!property) return;
+            
+            // Toggle sort direction if same column clicked
+            if (currentSort.column === column) {
+                currentSort.ascending = !currentSort.ascending;
+            } else {
+                currentSort.column = column;
+                currentSort.ascending = true;
+            }
+            
+            // Sort employees array
+            employees.sort((a, b) => {
+                let aVal = a[property];
+                let bVal = b[property];
+                
+                // Handle string comparison
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (aVal < bVal) return currentSort.ascending ? -1 : 1;
+                if (aVal > bVal) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+            
+            console.log('Sorted by', column, currentSort.ascending ? 'ascending' : 'descending');
+            
+            // Recreate table with sorted data
+            createTable();
+        }
+        
+        function deleteRow(row, id) {
+            if (confirm('Delete employee #' + id + '?')) {
+                row.remove();
+                
+                // Remove from data array
+                const index = employees.findIndex(emp => emp.id === id);
+                if (index !== -1) {
+                    employees.splice(index, 1);
+                }
+                
+                console.log('Deleted employee #', id);
+            }
+        }
+        
+        function showDetails(employee) {
+            alert(`Employee Details:\n\n` +
+                  `ID: ${employee.id}\n` +
+                  `Name: ${employee.name}\n` +
+                  `Age: ${employee.age}\n` +
+                  `Department: ${employee.department}\n` +
+                  `Salary: $${employee.salary.toLocaleString()}`);
+        }
+        
+        function clearTable() {
+            document.getElementById('table-container').innerHTML = '';
+            console.log('Table cleared');
+        }
+        
+        // Create table on page load
+        window.onload = createTable;
+    </script>
+</body>
+</html>

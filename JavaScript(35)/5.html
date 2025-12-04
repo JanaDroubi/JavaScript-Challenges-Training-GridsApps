@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 5: Parse and Modify</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #FF5722; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 5: Parse JSON and Modify Age</h1>
+    
+    <div class="code">
+        <p>let json = '{"name":"Adam","age":22}';</p>
+    </div>
+    
+    <p>Parse JSON, change age value only, and show result</p>
+    
+    <button onclick="parseAndModify()">Parse & Modify</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#ffecb3;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function parseAndModify() {
+            let json = '{"name":"Adam","age":22}';
+            let person = JSON.parse(json);
+            
+            // Store original age
+            let originalAge = person.age;
+            
+            // Modify age
+            person.age = 25;
+            
+            document.getElementById('result').innerHTML = 
+                `Original: Name=${person.name}, Age=${originalAge}<br>
+                 Modified: Name=${person.name}, Age=${person.age}<br>
+                 (Changed age from ${originalAge} to ${person.age})`;
+            
+            console.log('Original object:', {name: person.name, age: originalAge});
+            console.log('Modified object:', person);
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let json = '{"name":"Adam","age":22}';
+
+// Parse JSON to object
+let person = JSON.parse(json);
+
+console.log('Before:', person); // {name: "Adam", age: 22}
+
+// Modify age property
+person.age = 25;
+
+console.log('After:', person); // {name: "Adam", age: 25}
+
+// You can also modify multiple properties
+person.age = 30;
+person.city = "New York";
+
+// Convert back to JSON string
+let updatedJSON = JSON.stringify(person);
+console.log('Updated JSON:', updatedJSON);
+// '{"name":"Adam","age":30,"city":"New York"}'
+
+// Note: Original JSON string remains unchanged
+console.log('Original JSON string:', json);
+// '{"name":"Adam","age":22}'`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 9: Change H2 Text</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Change H2 Text to "Welcome to DOM!"</h1>
+    <h2 id="changeable-h2">Original H2 Text</h2>
+    
+    <button onclick="changeH2()">Change H2 Text</button>
+    <button onclick="resetH2()">Reset Text</button>
+    
+    <script>
+        function changeH2() {
+            const h2 = document.getElementById('changeable-h2');
+            h2.textContent = "Welcome to DOM!";
+            h2.style.color = "blue";
+        }
+        
+        function resetH2() {
+            const h2 = document.getElementById('changeable-h2');
+            h2.textContent = "Original H2 Text";
+            h2.style.color = "black";
+        }
+    </script>
+</body>
+</html>

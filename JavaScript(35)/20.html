@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 20: Large Object Cycle</title></head>
+<body>
+<h1>Stringify Large Object and Parse Back</h1>
+<button onclick="processLargeObject()">Process Large Object</button>
+<button onclick="displayInDOM()">Display in DOM</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="domDisplay" style="margin:20px 0;"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+let largeObject = null;
+let jsonString = '';
+
+function createLargeObject() {
+    let categories = [];
+    for (let i = 1; i <= 5; i++) {
+        let products = [];
+        for (let j = 1; j <= 20; j++) {
+            products.push({
+                id: `P${i}-${j}`,
+                name: `Product ${i}-${j}`,
+                price: Math.random() * 100 + 10,
+                inStock: Math.random() > 0.3,
+                features: ["Feature A", "Feature B", "Feature C"]
+            });
+        }
+        categories.push({
+            id: `C${i}`,
+            name: `Category ${i}`,
+            productCount: products.length,
+            products: products
+        });
+    }
+    
+    return {
+        store: {
+            name: "Mega Store",
+            location: "City Center",
+            departments: categories.length
+        },
+        inventory: {
+            totalProducts: categories.reduce((sum, cat) => sum + cat.products.length, 0),
+            categories: categories,
+            lastUpdated: new Date(),
+            stats: {
+                averagePrice: 0,
+                inStockCount: 0
+            }
+        }
+    };
+}
+
+function processLargeObject() {
+    largeObject = createLargeObject();
+    
+    // Calculate stats
+    let allProducts = [];
+    largeObject.inventory.categories.forEach(cat => {
+        allProducts = allProducts.concat(cat.products);
+    });
+    
+    largeObject.inventory.stats.averagePrice = 
+        allProducts.reduce((sum, p) => sum + p.price, 0) / allProducts.length;
+    largeObject.inventory.stats.inStockCount = 
+        allProducts.filter(p => p.inStock).length;
+    
+    // Stringify
+    jsonString = JSON.stringify(largeObject, null, 2);
+    
+    // Parse back
+    let parsedObject = JSON.parse(jsonString);
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>Original Object:</strong><br>
+         Store: ${largeObject.store.name}<br>
+         Categories: ${largeObject.inventory.categories.length}<br>
+         Total Products: ${largeObject.inventory.totalProducts}<br>
+         In Stock: ${largeObject.inventory.stats.inStockCount}<br>
+         Average Price: $${largeObject.inventory.stats.averagePrice.toFixed(2)}<br><br>
+         <strong>JSON String:</strong><br>
+         Length: ${jsonString.length} characters (~${Math.round(jsonString.length / 1024)} KB)<br><br>
+         <strong>After Parsing:</strong><br>
+         Objects equal? ${JSON.stringify(parsedObject) === JSON.stringify(largeObject) ? 'Yes' : 'No'}<br>
+         Type of parsed: ${typeof parsedObject}`;
+    
+    console.log('Original object size:', JSON.stringify(largeObject).length);
+    console.log('Parsed object type:', typeof parsedObject);
+}
+
+function displayInDOM() {
+    if (!jsonString) {
+        alert('Please create object first');
+        return;
+    }
+    
+    let parsed = JSON.parse(jsonString);
+    let display = document.getElementById('domDisplay');
+    display.innerHTML = '<h3>Store Inventory in DOM:</h3>';
+    
+    // Display store info
+    display.innerHTML += `<div style="background:#e8f5e9; padding:10px;">
+        <strong>Store:</strong> ${parsed.store.name}<br>
+        <strong>Location:</strong> ${parsed.store.location}<br>
+        <strong>Departments:</strong> ${parsed.store.departments}
+    </div>`;
+    
+    // Display categories
+    parsed.inventory.categories.forEach(category => {
+        let catDiv = document.createElement('div');
+        catDiv.style.background = '#e3f2fd';
+        catDiv.style.margin = '10px 0';
+        catDiv.style.padding = '10px';
+        
+        catDiv.innerHTML = `<strong>${category.name}</strong> (${category.productCount} products)`;
+        
+        // Show first 3 products
+        let productsList = document.createElement('ul');
+        category.products.slice(0, 3).forEach(product => {
+            productsList.innerHTML += `<li>${product.name} - $${product.price.toFixed(2)} 
+                ${product.inStock ? '✓' : '✗'}</li>`;
+        });
+        
+        if (category.products.length > 3) {
+            productsList.innerHTML += `<li>... and ${category.products.length - 3} more</li>`;
+        }
+        
+        catDiv.appendChild(productsList);
+        display.appendChild(catDiv);
+    });
+}
+
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`// Create large object
+let largeObj = {
+    data: Array(1000).fill().map((_, i) => ({
+        id: i,
+        value: Math.random(),
+        nested: {a: 1, b: 2, c: [1,2,3]}
+    }))
+};
+
+// Stringify large object
+let start = performance.now();
+let json = JSON.stringify(largeObj);
+let stringifyTime = performance.now() - start;
+
+console.log('Stringify time:', stringifyTime, 'ms');
+console.log('JSON size:', json.length, 'characters');
+
+// Parse back
+start = performance.now();
+let parsed = JSON.parse(json);
+let parseTime = performance.now() - start;
+
+console.log('Parse time:', parseTime, 'ms');
+console.log('Objects equal?', JSON.stringify(parsed) === json);
+
+// Display in DOM
+function displayInDOM(obj) {
+    let container = document.getElementById('display');
+    container.innerHTML = '';
+    
+    // Create table or list to display data
+    let table = '<table border="1"><tr><th>ID</th><th>Value</th></tr>';
+    
+    obj.data.slice(0, 10).forEach(item => { // Show first 10
+        table += \`<tr><td>\${item.id}</td><td>\${item.value}</td></tr>\`;
+    });
+    
+    table += '</table>';
+    container.innerHTML = table;
+}
+
+// Performance considerations:
+// 1. Large objects take time to stringify/parse
+// 2. Consider chunking very large data
+// 3. JSON is efficient but has size limits`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

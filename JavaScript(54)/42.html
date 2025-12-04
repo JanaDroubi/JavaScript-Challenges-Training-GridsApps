@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 42: Live Character Counter</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        textarea { width: 100%; height: 150px; padding: 10px; margin: 10px 0; }
+        .counter { margin: 10px 0; padding: 10px; }
+        .normal { color: black; }
+        .warning { color: orange; }
+        .error { color: red; font-weight: bold; }
+        .char-display { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Live Character Counter for Textarea</h1>
+    
+    <textarea id="text-input" placeholder="Start typing here..."></textarea>
+    
+    <div id="counter" class="counter">
+        Characters: <span id="char-count" class="char-display">0</span> / 
+        <span id="max-chars">100</span>
+    </div>
+    
+    <div id="message"></div>
+    
+    <script>
+        const maxChars = 100;
+        const textarea = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+        const maxCharsSpan = document.getElementById('max-chars');
+        const counter = document.getElementById('counter');
+        const message = document.getElementById('message');
+        
+        // Set max characters display
+        maxCharsSpan.textContent = maxChars;
+        
+        // Initial update
+        updateCounter();
+        
+        // Add input event listener
+        textarea.addEventListener('input', updateCounter);
+        
+        function updateCounter() {
+            const text = textarea.value;
+            const currentLength = text.length;
+            const remaining = maxChars - currentLength;
+            
+            // Update character count
+            charCount.textContent = currentLength;
+            
+            // Update counter color based on remaining characters
+            if (remaining > 20) {
+                counter.className = 'counter normal';
+                message.textContent = '';
+            } else if (remaining > 0) {
+                counter.className = 'counter warning';
+                message.textContent = `Warning: Only ${remaining} characters left`;
+                message.style.color = 'orange';
+            } else if (remaining === 0) {
+                counter.className = 'counter warning';
+                message.textContent = 'Maximum characters reached!';
+                message.style.color = 'orange';
+            } else {
+                counter.className = 'counter error';
+                message.textContent = `Error: ${-remaining} characters over limit!`;
+                message.style.color = 'red';
+            }
+            
+            // Truncate text if over limit
+            if (currentLength > maxChars) {
+                textarea.value = text.substring(0, maxChars);
+                updateCounter(); // Recursive call to update with truncated text
+            }
+            
+            console.log('Characters:', currentLength, '/', maxChars, 'Remaining:', remaining);
+        }
+        
+        // Add keyup event for additional logging
+        textarea.addEventListener('keyup', function(e) {
+            console.log('Key pressed:', e.key, '| Text length:', this.value.length);
+        });
+    </script>
+</body>
+</html>

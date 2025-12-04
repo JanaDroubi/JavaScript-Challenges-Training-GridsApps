@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 51: Click Counter</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; text-align: center; }
+        .counter-display {
+            font-size: 5em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 30px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .counter-button {
+            padding: 20px 40px;
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .counter-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .counter-button:active {
+            transform: translateY(1px);
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .control-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .increment-by {
+            margin: 20px 0;
+        }
+        .achievement {
+            margin: 10px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: none;
+        }
+        .milestone {
+            background-color: #ffeb3b !important;
+            animation: pulse 0.5s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Click Counter</h1>
+    <p>Click the button to increase the counter. Try to reach the milestones!</p>
+    
+    <div class="counter-display" id="counter">0</div>
+    
+    <button class="counter-button" onclick="incrementCounter()">Click Me!</button>
+    
+    <div class="controls">
+        <button class="control-button" onclick="incrementBy(5)">+5</button>
+        <button class="control-button" onclick="incrementBy(10)">+10</button>
+        <button class="control-button" onclick="resetCounter()">Reset</button>
+        <button class="control-button" onclick="decrementCounter()">-1</button>
+    </div>
+    
+    <div class="increment-by">
+        <input type="number" id="custom-increment" value="1" min="1" style="padding: 10px; width: 60px;">
+        <button class="control-button" onclick="incrementCustom()">Increment by Custom Amount</button>
+    </div>
+    
+    <div id="achievements"></div>
+    
+    <script>
+        let count = 0;
+        const milestones = [10, 25, 50, 100, 150, 200, 300, 500];
+        const achievedMilestones = new Set();
+        
+        function incrementCounter() {
+            count++;
+            updateDisplay();
+            checkMilestones();
+            saveToLocalStorage();
+            console.log('Counter incremented to:', count);
+        }
+        
+        function incrementBy(amount) {
+            count += amount;
+            updateDisplay();
+            checkMilestones();
+            saveToLocalStorage();
+            console.log('Counter increased by', amount, 'to:', count);
+        }
+        
+        function incrementCustom() {
+            const input = document.getElementById('custom-increment');
+            const amount = parseInt(input.value) || 1;
+            incrementBy(amount);
+        }
+        
+        function decrementCounter() {
+            if (count > 0) {
+                count--;
+                updateDisplay();
+                saveToLocalStorage();
+                console.log('Counter decremented to:', count);
+            }
+        }
+        
+        function resetCounter() {
+            if (confirm('Are you sure you want to reset the counter?')) {
+                count = 0;
+                updateDisplay();
+                achievedMilestones.clear();
+                document.getElementById('achievements').innerHTML = '';
+                localStorage.removeItem('clickCounter');
+                console.log('Counter reset');
+            }
+        }
+        
+        function updateDisplay() {
+            const counterElement = document.getElementById('counter');
+            counterElement.textContent = count;
+            
+            // Add animation effect
+            counterElement.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                counterElement.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Change color based on count
+            if (count >= 100) {
+                counterElement.style.color = '#ff5722';
+            } else if (count >= 50) {
+                counterElement.style.color = '#2196F3';
+            } else if (count >= 25) {
+                counterElement.style.color = '#9C27B0';
+            } else {
+                counterElement.style.color = '#4CAF50';
+            }
+        }
+        
+        function checkMilestones() {
+            const achievementsDiv = document.getElementById('achievements');
+            
+            milestones.forEach(milestone => {
+                if (count >= milestone && !achievedMilestones.has(milestone)) {
+                    achievedMilestones.add(milestone);
+                    
+                    const achievement = document.createElement('div');
+                    achievement.className = 'achievement milestone';
+                    achievement.textContent = `🎉 Milestone reached: ${milestone} clicks!`;
+                    achievementsDiv.appendChild(achievement);
+                    
+                    // Show the achievement
+                    setTimeout(() => {
+                        achievement.style.display = 'block';
+                        setTimeout(() => {
+                            achievement.classList.remove('milestone');
+                        }, 1000);
+                    }, 100);
+                    
+                    console.log(`Milestone ${milestone} reached!`);
+                }
+            });
+            
+            // Remove old achievements after 5 seconds
+            setTimeout(() => {
+                const achievements = document.querySelectorAll('.achievement');
+                achievements.forEach((ach, index) => {
+                    if (!ach.classList.contains('milestone') && index > 2) {
+                        ach.remove();
+                    }
+                });
+            }, 5000);
+        }
+        
+        function saveToLocalStorage() {
+            localStorage.setItem('clickCounter', count);
+            const milestonesArray = Array.from(achievedMilestones);
+            localStorage.setItem('achievedMilestones', JSON.stringify(milestonesArray));
+        }
+        
+        function loadFromLocalStorage() {
+            const savedCount = localStorage.getItem('clickCounter');
+            if (savedCount) {
+                count = parseInt(savedCount);
+                updateDisplay();
+            }
+            
+            const savedMilestones = localStorage.getItem('achievedMilestones');
+            if (savedMilestones) {
+                const milestonesArray = JSON.parse(savedMilestones);
+                milestonesArray.forEach(m => achievedMilestones.add(m));
+            }
+        }
+        
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Enter') {
+                incrementCounter();
+            } else if (event.key === 'r' || event.key === 'R') {
+                resetCounter();
+            } else if (event.key === 'ArrowUp') {
+                incrementCounter();
+            } else if (event.key === 'ArrowDown' && count > 0) {
+                decrementCounter();
+            }
+        });
+        
+        // Load saved counter on page load
+        window.onload = function() {
+            loadFromLocalStorage();
+            console.log('Counter loaded from localStorage:', count);
+        };
+    </script>
+</body>
+</html>

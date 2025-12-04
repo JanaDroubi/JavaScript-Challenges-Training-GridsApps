@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 40: Clone DOM Element</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        .original, .clone { border: 2px solid; padding: 20px; margin: 10px; }
+        .original { border-color: green; background-color: #e8f5e9; }
+        .clone { border-color: blue; background-color: #e3f2fd; }
+        .clone h3::after { content: " (CLONE)"; color: red; }
+        .container { display: flex; gap: 20px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Clone DOM Element with cloneNode()</h1>
+    
+    <div class="container">
+        <div id="original-container">
+            <h3>Original Container</h3>
+            <div id="original-element" class="original">
+                <h4>Original Element</h4>
+                <p>This is the original element that will be cloned.</p>
+                <ul>
+                    <li>List item 1</li>
+                    <li>List item 2</li>
+                    <li>List item 3</li>
+                </ul>
+                <button onclick="alert('Original button clicked')">Original Button</button>
+            </div>
+        </div>
+        
+        <div id="clone-container">
+            <h3>Clone Container</h3>
+            <p>Cloned elements will appear here</p>
+        </div>
+    </div>
+    
+    <button onclick="cloneElement(true)">Clone with Children (deep clone)</button>
+    <button onclick="cloneElement(false)">Clone without Children (shallow clone)</button>
+    <button onclick="clearClones()">Clear All Clones</button>
+    
+    <script>
+        let cloneCount = 0;
+        
+        function cloneElement(deep) {
+            cloneCount++;
+            
+            // Get original element
+            const original = document.getElementById('original-element');
+            
+            // Clone the element
+            const clone = original.cloneNode(deep); // true = deep clone, false = shallow
+            
+            // Modify clone to distinguish it
+            clone.id = 'clone-' + cloneCount;
+            clone.className = 'clone';
+            
+            // Update button text in clone if deep clone
+            if (deep) {
+                const button = clone.querySelector('button');
+                if (button) {
+                    button.textContent = 'Clone Button ' + cloneCount;
+                    button.onclick = function() {
+                        alert('Clone button ' + cloneCount + ' clicked!');
+                    };
+                }
+                
+                // Update list items in clone
+                const listItems = clone.querySelectorAll('li');
+                listItems.forEach((li, index) => {
+                    li.textContent = `Clone list item ${index + 1}`;
+                });
+            }
+            
+            // Add clone to clone container
+            const cloneContainer = document.getElementById('clone-container');
+            cloneContainer.appendChild(clone);
+            
+            console.log('Cloned element:', clone);
+            console.log('Deep clone:', deep);
+            console.log('Clone count:', cloneCount);
+        }
+        
+        function clearClones() {
+            const cloneContainer = document.getElementById('clone-container');
+            // Remove all cloned elements (keeping the heading)
+            const clones = cloneContainer.querySelectorAll('.clone');
+            clones.forEach(clone => clone.remove());
+            cloneCount = 0;
+            console.log('Cleared all clones');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 12: Change All P Font Size</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Change All Paragraphs to 20px</h1>
+    
+    <p>This is paragraph 1 with normal font size.</p>
+    <p>This is paragraph 2 with normal font size.</p>
+    <p>This is paragraph 3 with normal font size.</p>
+    <div>This is a div, not a paragraph.</div>
+    <p>This is paragraph 4 with normal font size.</p>
+    
+    <button onclick="changeFontSize()">Change All P to 20px</button>
+    <button onclick="resetFontSize()">Reset Font Size</button>
+    
+    <script>
+        function changeFontSize() {
+            const allParagraphs = document.getElementsByTagName('p');
+            
+            Array.from(allParagraphs).forEach(p => {
+                p.style.fontSize = '20px';
+                p.style.color = 'blue';
+            });
+        }
+        
+        function resetFontSize() {
+            const allParagraphs = document.getElementsByTagName('p');
+            
+            Array.from(allParagraphs).forEach(p => {
+                p.style.fontSize = '';
+                p.style.color = '';
+            });
+        }
+    </script>
+</body>
+</html>

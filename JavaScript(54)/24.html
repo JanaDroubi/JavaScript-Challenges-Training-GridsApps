@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 24: Double-Click Paragraph to Bold</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        p { padding: 20px; border: 1px solid #ccc; cursor: pointer; }
+        .bold-text { font-weight: bold; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Double-Click Paragraph to Make Text Bold</h1>
+    
+    <p id="double-click-paragraph">Double-click this paragraph to make the text bold. Double-click again to toggle.</p>
+    
+    <p>Another paragraph that won't be affected.</p>
+    
+    <button onclick="addDoubleClickListener()">Add Double-Click Listener</button>
+    <button onclick="removeDoubleClickListener()">Remove Double-Click Listener</button>
+    <button onclick="resetParagraph()">Reset Paragraph</button>
+    
+    <script>
+        function handleDoubleClick() {
+            const paragraph = document.getElementById('double-click-paragraph');
+            paragraph.classList.toggle('bold-text');
+            
+            const isBold = paragraph.classList.contains('bold-text');
+            console.log('Double-clicked! Bold is now:', isBold ? 'ON' : 'OFF');
+        }
+        
+        function addDoubleClickListener() {
+            const paragraph = document.getElementById('double-click-paragraph');
+            paragraph.addEventListener('dblclick', handleDoubleClick);
+            console.log('Double-click listener added to paragraph');
+            alert('Double-click listener added! Double-click the paragraph.');
+        }
+        
+        function removeDoubleClickListener() {
+            const paragraph = document.getElementById('double-click-paragraph');
+            paragraph.removeEventListener('dblclick', handleDoubleClick);
+            console.log('Double-click listener removed from paragraph');
+            alert('Double-click listener removed!');
+        }
+        
+        function resetParagraph() {
+            const paragraph = document.getElementById('double-click-paragraph');
+            paragraph.classList.remove('bold-text');
+        }
+    </script>
+</body>
+</html>

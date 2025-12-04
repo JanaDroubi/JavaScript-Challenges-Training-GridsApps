@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 17: Click Event Listener</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Add Click Event Listener to Button</h1>
+    
+    <p>Click the button below to see the alert message.</p>
+    
+    <button id="alert-button">Click Me for Alert!</button>
+    <button onclick="removeEventListener()">Remove Event Listener</button>
+    
+    <script>
+        // Function to show alert
+        function showAlert() {
+            alert("Button clicked!");
+            console.log("Button was clicked - alert shown");
+        }
+        
+        // Add event listener when page loads
+        window.onload = function() {
+            const button = document.getElementById('alert-button');
+            button.addEventListener('click', showAlert);
+            console.log("Event listener added to button");
+        };
+        
+        function removeEventListener() {
+            const button = document.getElementById('alert-button');
+            button.removeEventListener('click', showAlert);
+            alert("Event listener removed!");
+            console.log("Event listener removed from button");
+        }
+    </script>
+</body>
+</html>

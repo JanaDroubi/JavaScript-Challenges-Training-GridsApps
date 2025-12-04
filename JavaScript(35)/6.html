@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 6: Boolean and Null Values</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #607D8B; color: white; border: none; }
+        .type { padding: 5px 10px; margin: 2px; border-radius: 3px; }
+        .boolean { background: #FFEB3B; color: #000; }
+        .null { background: #9E9E9E; color: white; }
+        .string { background: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 6: Boolean and Null in JSON</h1>
+    
+    <div class="code">
+        <p>let json = '{"active":true,"data":null,"message":"Hello"}';</p>
+    </div>
+    
+    <p>Parse JSON and check data types of each value</p>
+    
+    <button onclick="checkTypes()">Check Data Types</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#f5f5f5;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function checkTypes() {
+            let json = '{"active":true,"data":null,"message":"Hello"}';
+            let obj = JSON.parse(json);
+            
+            let result = '<h3>Data Types:</h3>';
+            
+            for (let key in obj) {
+                let value = obj[key];
+                let type = typeof value;
+                let typeClass = '';
+                
+                if (type === 'boolean') typeClass = 'boolean';
+                else if (value === null) typeClass = 'null';
+                else if (type === 'string') typeClass = 'string';
+                
+                result += `${key}: ${value} `;
+                result += `<span class="type ${typeClass}">${value === null ? 'null' : type}</span><br>`;
+            }
+            
+            document.getElementById('result').innerHTML = result;
+            
+            console.log('Parsed object:', obj);
+            console.log('active type:', typeof obj.active, 'value:', obj.active);
+            console.log('data type:', typeof obj.data, 'value:', obj.data);
+            console.log('message type:', typeof obj.message, 'value:', obj.message);
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let json = '{"active":true,"data":null,"message":"Hello"}';
+let obj = JSON.parse(json);
+
+// Check data types
+console.log('active:', obj.active, 'type:', typeof obj.active);  // true, "boolean"
+console.log('data:', obj.data, 'type:', typeof obj.data);        // null, "object"
+console.log('message:', obj.message, 'type:', typeof obj.message); // "Hello", "string"
+
+// Important: typeof null returns "object" (historical JavaScript quirk)
+console.log(typeof null); // "object"
+
+// Checking for null properly
+console.log(obj.data === null); // true
+console.log(obj.data == null);  // true (loose equality)
+
+// Boolean values in conditions
+if (obj.active) {
+    console.log('Active is true');
+}
+
+// Null check
+if (obj.data === null) {
+    console.log('Data is null');
+}
+
+// JSON supports these primitive types:
+// - String: "text"
+// - Number: 123, 12.34
+// - Boolean: true, false
+// - Null: null
+// - Array: [1, 2, 3]
+// - Object: {"key": "value"}`;
+        }
+    </script>
+</body>
+</html>

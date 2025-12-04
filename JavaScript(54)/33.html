@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 33: Create and Append LI</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { border: 1px solid #ccc; padding: 20px; }
+        li { padding: 5px; margin: 3px; }
+        .new-item { background-color: lightgreen; }
+        button { margin: 10px; padding: 10px; }
+        input { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Create New LI and Append to UL</h1>
+    
+    <ul id="my-ul">
+        <li>Existing item 1</li>
+        <li>Existing item 2</li>
+        <li>Existing item 3</li>
+    </ul>
+    
+    <input type="text" id="item-text" placeholder="Enter new item text">
+    <button onclick="addNewItem()">Add New List Item</button>
+    <button onclick="clearList()">Clear All Items</button>
+    
+    <script>
+        function addNewItem() {
+            // Get the input value
+            const input = document.getElementById('item-text');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Please enter some text for the new item');
+                return;
+            }
+            
+            // Create new li element
+            const newLi = document.createElement('li');
+            newLi.textContent = text;
+            newLi.className = 'new-item';
+            
+            // Append to ul
+            const ul = document.getElementById('my-ul');
+            ul.appendChild(newLi);
+            
+            console.log('New li created:', newLi);
+            console.log('Appended to ul:', ul);
+            
+            // Clear input
+            input.value = '';
+            
+            // Remove 'new-item' class after 3 seconds
+            setTimeout(() => {
+                newLi.classList.remove('new-item');
+            }, 3000);
+        }
+        
+        function clearList() {
+            const ul = document.getElementById('my-ul');
+            ul.innerHTML = '';
+            console.log('Cleared all items from ul');
+        }
+    </script>
+</body>
+</html>

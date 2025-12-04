@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 7: Calculate Sum of Grades</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #009688; color: white; border: none; }
+        .grades { display: flex; gap: 10px; margin: 15px 0; }
+        .grade { padding: 10px; background: #4CAF50; color: white; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 7: Sum of Grades</h1>
+    
+    <div class="code">
+        <p>let json = '{"grades":[50, 60, 70]}';</p>
+    </div>
+    
+    <p>Parse JSON and calculate sum of grades array</p>
+    
+    <button onclick="calculateSum()">Calculate Sum</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#e0f2f1;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function calculateSum() {
+            let json = '{"grades":[50, 60, 70]}';
+            let data = JSON.parse(json);
+            let grades = data.grades;
+            
+            // Calculate sum
+            let sum = grades.reduce((total, grade) => total + grade, 0);
+            let average = sum / grades.length;
+            
+            // Display grades
+            let gradesHTML = '<div class="grades">';
+            grades.forEach(grade => {
+                gradesHTML += `<div class="grade">${grade}</div>`;
+            });
+            gradesHTML += '</div>';
+            
+            document.getElementById('result').innerHTML = 
+                `${gradesHTML}
+                 <strong>Sum:</strong> ${sum}<br>
+                 <strong>Average:</strong> ${average.toFixed(2)}<br>
+                 <strong>Number of grades:</strong> ${grades.length}`;
+            
+            console.log('Grades array:', grades);
+            console.log('Sum:', sum);
+            console.log('Average:', average);
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let json = '{"grades":[50, 60, 70]}';
+let data = JSON.parse(json);
+let grades = data.grades;
+
+// Method 1: Using reduce (modern)
+let sum1 = grades.reduce((total, grade) => total + grade, 0);
+
+// Method 2: Using for loop
+let sum2 = 0;
+for (let i = 0; i < grades.length; i++) {
+    sum2 += grades[i];
+}
+
+// Method 3: Using for...of
+let sum3 = 0;
+for (let grade of grades) {
+    sum3 += grade;
+}
+
+// Calculate average
+let average = sum1 / grades.length;
+
+console.log('Grades:', grades);      // [50, 60, 70]
+console.log('Sum (reduce):', sum1);  // 180
+console.log('Sum (for loop):', sum2); // 180
+console.log('Sum (for...of):', sum3); // 180
+console.log('Average:', average);    // 60
+
+// Additional calculations
+let maxGrade = Math.max(...grades);
+let minGrade = Math.min(...grades);
+
+console.log('Max grade:', maxGrade); // 70
+console.log('Min grade:', minGrade); // 50
+
+// Filter grades above 65
+let highGrades = grades.filter(grade => grade > 65);
+console.log('Grades above 65:', highGrades); // [70]`;
+        }
+    </script>
+</body>
+</html>

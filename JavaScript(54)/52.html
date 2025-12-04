@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 52: Dynamic Shopping List</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .shopping-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #item-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #add-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #add-button:hover {
+            background-color: #45a049;
+        }
+        .shopping-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .list-item:hover {
+            background-color: #f0f0f0;
+        }
+        .list-item.completed {
+            text-decoration: line-through;
+            color: #888;
+            background-color: #e8f5e9;
+        }
+        .item-text {
+            flex-grow: 1;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .item-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .delete-button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #ff5252;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .quantity-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .quantity-button:hover {
+            background-color: #0b7dda;
+        }
+        .quantity {
+            min-width: 30px;
+            text-align: center;
+        }
+        .list-stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="shopping-header">
+        <h1>Shopping List</h1>
+        <p>Add items, click to mark as purchased, delete when done</p>
+    </div>
+    
+    <div class="input-container">
+        <input type="text" id="item-input" placeholder="Enter item name..." onkeypress="handleEnterKey(event)">
+        <button id="add-button" onclick="addItem()">Add Item</button>
+    </div>
+    
+    <ul class="shopping-list" id="shopping-list">
+        <li class="empty-message" id="empty-message">Your shopping list is empty. Add some items!</li>
+    </ul>
+    
+    <div class="list-stats">
+        <div>
+            <strong>Total Items:</strong> <span id="total-count">0</span>
+        </div>
+        <div>
+            <strong>Completed:</strong> <span id="completed-count">0</span>
+        </div>
+        <div>
+            <strong>Remaining:</strong> <span id="remaining-count">0</span>
+        </div>
+    </div>
+    
+    <div style="margin-top: 20px; text-align: center;">
+        <button onclick="clearCompleted()" style="margin-right: 10px;">Clear Completed</button>
+        <button onclick="clearAll()">Clear All</button>
+        <button onclick="saveList()" style="margin-left: 10px; background-color: #2196F3;">Save List</button>
+    </div>
+    
+    <script>
+        let items = [];
+        let itemId = 0;
+        
+        function addItem() {
+            const input = document.getElementById('item-input');
+            const itemName = input.value.trim();
+            
+            if (!itemName) {
+                alert('Please enter an item name');
+                return;
+            }
+            
+            itemId++;
+            const newItem = {
+                id: itemId,
+                name: itemName,
+                completed: false,
+                quantity: 1
+            };
+            
+            items.push(newItem);
+            renderList();
+            input.value = '';
+            input.focus();
+            
+            console.log('Added item:', newItem);
+        }
+        
+        function renderList() {
+            const listElement = document.getElementById('shopping-list');
+            const emptyMessage = document.getElementById('empty-message');
+            
+            if (items.length === 0) {
+                emptyMessage.style.display = 'block';
+                listElement.innerHTML = '';
+                listElement.appendChild(emptyMessage);
+            } else {
+                emptyMessage.style.display = 'none';
+                listElement.innerHTML = '';
+                
+                items.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.className = `list-item ${item.completed ? 'completed' : ''}`;
+                    listItem.dataset.id = item.id;
+                    
+                    listItem.innerHTML = `
+                        <div class="item-text" onclick="toggleItem(${item.id})">
+                            ${item.name}
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-button" onclick="changeQuantity(${item.id}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-button" onclick="changeQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <div class="item-controls">
+                            <button class="delete-button" onclick="deleteItem(${item.id})">Delete</button>
+                        </div>
+                    `;
+                    
+                    listElement.appendChild(listItem);
+                });
+            }
+            
+            updateStats();
+        }
+        
+        function toggleItem(id) {
+            const item = items.find(item => item.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                renderList();
+                console.log('Toggled item:', item.name, 'completed:', item.completed);
+            }
+        }
+        
+        function deleteItem(id) {
+            if (confirm('Delete this item?')) {
+                items = items.filter(item => item.id !== id);
+                renderList();
+                console.log('Deleted item with id:', id);
+            }
+        }
+        
+        function changeQuantity(id, change) {
+            const item = items.find(item => item.id === id);
+            if (item) {
+                const newQuantity = item.quantity + change;
+                if (newQuantity >= 1 && newQuantity <= 99) {
+                    item.quantity = newQuantity;
+                    renderList();
+                    console.log('Changed quantity for', item.name, 'to', item.quantity);
+                }
+            }
+        }
+        
+        function updateStats() {
+            const total = items.length;
+            const completed = items.filter(item => item.completed).length;
+            const remaining = total - completed;
+            
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('completed-count').textContent = completed;
+            document.getElementById('remaining-count').textContent = remaining;
+        }
+        
+        function clearCompleted() {
+            if (confirm('Remove all completed items?')) {
+                items = items.filter(item => !item.completed);
+                renderList();
+                console.log('Cleared completed items');
+            }
+        }
+        
+        function clearAll() {
+            if (confirm('Clear entire shopping list?')) {
+                items = [];
+                renderList();
+                console.log('Cleared all items');
+            }
+        }
+        
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                addItem();
+            }
+        }
+        
+        function saveList() {
+            localStorage.setItem('shoppingList', JSON.stringify(items));
+            alert('Shopping list saved!');
+            console.log('Saved shopping list to localStorage');
+        }
+        
+        function loadList() {
+            const savedList = localStorage.getItem('shoppingList');
+            if (savedList) {
+                items = JSON.parse(savedList);
+                if (items.length > 0) {
+                    itemId = Math.max(...items.map(item => item.id));
+                }
+                renderList();
+                console.log('Loaded shopping list from localStorage');
+            }
+        }
+        
+        // Load saved list on page load
+        window.onload = function() {
+            loadList();
+        };
+    </script>
+</body>
+</html>

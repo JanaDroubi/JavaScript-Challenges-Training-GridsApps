@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 35: Create Div with Title and Paragraph</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        #container { border: 2px solid #ccc; padding: 20px; margin: 10px; }
+        .dynamic-div { border: 1px solid blue; padding: 15px; margin: 10px; background-color: #f0f8ff; }
+    </style>
+</head>
+<body>
+    <h1>Create Div with Title and Paragraph</h1>
+    
+    <div id="container">
+        <p>Dynamic content will appear here</p>
+    </div>
+    
+    <button onclick="createContentDiv()">Create New Content Div</button>
+    <button onclick="clearContainer()">Clear Container</button>
+    
+    <script>
+        function createContentDiv() {
+            // Create div container
+            const newDiv = document.createElement('div');
+            newDiv.className = 'dynamic-div';
+            
+            // Create title (h3)
+            const title = document.createElement('h3');
+            title.textContent = 'Dynamic Title ' + (Math.floor(Math.random() * 100) + 1);
+            title.style.color = '#2c3e50';
+            
+            // Create paragraph
+            const paragraph = document.createElement('p');
+            paragraph.textContent = 'This is a dynamically created paragraph. It was created using JavaScript DOM methods like createElement() and appendChild().';
+            paragraph.style.color = '#34495e';
+            
+            // Append title and paragraph to div
+            newDiv.appendChild(title);
+            newDiv.appendChild(paragraph);
+            
+            // Append div to container
+            const container = document.getElementById('container');
+            container.appendChild(newDiv);
+            
+            console.log('Created new div with title and paragraph:', newDiv);
+        }
+        
+        function clearContainer() {
+            const container = document.getElementById('container');
+            container.innerHTML = '<p>Dynamic content will appear here</p>';
+            console.log('Cleared container');
+        }
+    </script>
+</body>
+</html>

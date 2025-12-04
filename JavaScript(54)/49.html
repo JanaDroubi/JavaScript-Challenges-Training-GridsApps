@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 49: Form Validation</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .error {
+            border-color: red !important;
+            background-color: #ffe6e6;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-message {
+            color: green;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .validation-summary {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Form Validation with DOM</h1>
+    
+    <div class="validation-summary">
+        <h3>Validation Rules:</h3>
+        <ul>
+            <li>All fields are required</li>
+            <li>Name must be at least 2 characters</li>
+            <li>Email must be valid format</li>
+            <li>Password must be at least 6 characters</li>
+            <li>Password and Confirm Password must match</li>
+            <li>Age must be between 18 and 100</li>
+        </ul>
+    </div>
+    
+    <form id="registration-form">
+        <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name">
+            <div class="error-message" id="name-error">Name must be at least 2 characters</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email">
+            <div class="error-message" id="email-error">Please enter a valid email address</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" placeholder="Enter password (min 6 characters)">
+            <div class="error-message" id="password-error">Password must be at least 6 characters</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password *</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password">
+            <div class="error-message" id="confirm-password-error">Passwords do not match</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age *</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age" min="18" max="100">
+            <div class="error-message" id="age-error">Age must be between 18 and 100</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" name="country">
+                <option value="">Select a country</option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="ca">Canada</option>
+                <option value="au">Australia</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="terms" name="terms">
+                I agree to the terms and conditions *
+            </label>
+            <div class="error-message" id="terms-error">You must agree to the terms</div>
+        </div>
+        
+        <button type="button" onclick="validateForm()">Submit Form</button>
+        <button type="button" onclick="resetForm()">Reset Form</button>
+        
+        <div class="success-message" id="success-message">
+            Form submitted successfully!
+        </div>
+    </form>
+    
+    <div id="form-data" style="margin-top: 20px; padding: 15px; background-color: #f0f0f0; display: none;">
+        <h3>Submitted Data:</h3>
+        <pre id="data-output"></pre>
+    </div>
+    
+    <script>
+        // Get form elements
+        const form = document.getElementById('registration-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const ageInput = document.getElementById('age');
+        const termsCheckbox = document.getElementById('terms');
+        
+        // Add real-time validation
+        nameInput.addEventListener('blur', validateName);
+        emailInput.addEventListener('blur', validateEmail);
+        passwordInput.addEventListener('blur', validatePassword);
+        confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+        ageInput.addEventListener('blur', validateAge);
+        termsCheckbox.addEventListener('change', validateTerms);
+        
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId.split('-')[0]);
+            const errorElement = document.getElementById(elementId);
+            
+            element.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            return false;
+        }
+        
+        function hideError(elementId) {
+            const element = document.getElementById(elementId.split('-')[0]);
+            const errorElement = document.getElementById(elementId);
+            
+            element.classList.remove('error');
+            errorElement.style.display = 'none';
+            
+            return true;
+        }
+        
+        function validateName() {
+            const name = nameInput.value.trim();
+            if (name.length < 2) {
+                return showError('name-error', 'Name must be at least 2 characters');
+            }
+            return hideError('name-error');
+        }
+        
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                return showError('email-error', 'Please enter a valid email address');
+            }
+            return hideError('email-error');
+        }
+        
+        function validatePassword() {
+            const password = passwordInput.value;
+            if (password.length < 6) {
+                return showError('password-error', 'Password must be at least 6 characters');
+            }
+            return hideError('password-error');
+        }
+        
+        function validateConfirmPassword() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (password !== confirmPassword) {
+                return showError('confirm-password-error', 'Passwords do not match');
+            }
+            return hideError('confirm-password-error');
+        }
+        
+        function validateAge() {
+            const age = parseInt(ageInput.value);
+            if (isNaN(age) || age < 18 || age > 100) {
+                return showError('age-error', 'Age must be between 18 and 100');
+            }
+            return hideError('age-error');
+        }
+        
+        function validateTerms() {
+            if (!termsCheckbox.checked) {
+                return showError('terms-error', 'You must agree to the terms');
+            }
+            return hideError('terms-error');
+        }
+        
+        function validateForm() {
+            console.log('=== Form Validation Started ===');
+            
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            const isAgeValid = validateAge();
+            const isTermsValid = validateTerms();
+            
+            const isValid = isNameValid && isEmailValid && isPasswordValid && 
+                           isConfirmPasswordValid && isAgeValid && isTermsValid;
+            
+            if (isValid) {
+                // Show success message
+                document.getElementById('success-message').style.display = 'block';
+                
+                // Display form data
+                const formDataDiv = document.getElementById('form-data');
+                const dataOutput = document.getElementById('data-output');
+                
+                const formData = {
+                    name: nameInput.value,
+                    email: emailInput.value,
+                    age: ageInput.value,
+                    country: document.getElementById('country').value,
+                    bio: document.getElementById('bio').value
+                };
+                
+                dataOutput.textContent = JSON.stringify(formData, null, 2);
+                formDataDiv.style.display = 'block';
+                
+                console.log('Form submitted successfully!', formData);
+                
+                // Scroll to show results
+                formDataDiv.scrollIntoView({ behavior: 'smooth' });
+                
+                // In real application, you would submit to server here
+                // form.submit();
+            } else {
+                console.log('Form validation failed');
+                alert('Please fix the errors in the form before submitting.');
+            }
+            
+            return false; // Prevent form submission for demo
+        }
+        
+        function resetForm() {
+            form.reset();
+            
+            // Clear all errors
+            ['name-error', 'email-error', 'password-error', 'confirm-password-error', 'age-error', 'terms-error']
+                .forEach(id => hideError(id));
+            
+            // Hide success message and data display
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('form-data').style.display = 'none';
+            
+            console.log('Form reset');
+        }
+        
+        // Prevent form submission (for demo purposes)
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            validateForm();
+        });
+    </script>
+</body>
+</html>

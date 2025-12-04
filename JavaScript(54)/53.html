@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 53: CSS Animation with setInterval</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            padding: 20px; 
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .animation-container {
+            width: 800px;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .animated-box {
+            width: 60px;
+            height: 60px;
+            background-color: #4CAF50;
+            position: absolute;
+            border-radius: 8px;
+            transition: all 0.1s linear;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slider-container {
+            margin: 15px 0;
+        }
+        input[type="range"] {
+            width: 300px;
+            margin: 0 10px;
+        }
+        .stats {
+            margin: 10px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .trail {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(76, 175, 80, 0.3);
+            pointer-events: none;
+        }
+        @keyframes colorChange {
+            0% { background-color: #4CAF50; }
+            25% { background-color: #2196F3; }
+            50% { background-color: #9C27B0; }
+            75% { background-color: #FF9800; }
+            100% { background-color: #4CAF50; }
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Animation with setInterval</h1>
+    <p>Control the animation using the controls below</p>
+    
+    <div class="animation-container" id="animation-container">
+        <div class="animated-box" id="animated-box"></div>
+    </div>
+    
+    <div class="controls">
+        <div>
+            <button id="start-btn" onclick="startAnimation()">Start Animation</button>
+            <button id="stop-btn" onclick="stopAnimation()" disabled>Stop Animation</button>
+            <button onclick="resetAnimation()">Reset</button>
+            <button onclick="changeAnimationMode()" id="mode-btn">Mode: Bounce</button>
+        </div>
+        
+        <div class="slider-container">
+            <label>Speed: <span id="speed-value">50</span>ms</label>
+            <input type="range" id="speed-slider" min="10" max="200" value="50" oninput="updateSpeed()">
+        </div>
+        
+        <div class="slider-container">
+            <label>Size: <span id="size-value">60</span>px</label>
+            <input type="range" id="size-slider" min="20" max="120" value="60" oninput="updateSize()">
+        </div>
+        
+        <div>
+            <button onclick="toggleTrail()" id="trail-btn">Trail: Off</button>
+            <button onclick="toggleColorAnimation()" id="color-btn">Color Animation: Off</button>
+            <button onclick="addBox()">Add Another Box</button>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <strong>Position:</strong> X: <span id="pos-x">0</span>, Y: <span id="pos-y">0</span> |
+        <strong>Frame:</strong> <span id="frame-count">0</span> |
+        <strong>FPS:</strong> <span id="fps">0</span>
+    </div>
+    
+    <script>
+        const container = document.getElementById('animation-container');
+        const box = document.getElementById('animated-box');
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        let animationInterval;
+        let isAnimating = false;
+        let frameCount = 0;
+        let lastFrameTime = Date.now();
+        let fps = 0;
+        
+        // Animation properties
+        let posX = 0;
+        let posY = 0;
+        let speedX = 3;
+        let speedY = 2;
+        let boxSize = 60;
+        let animationSpeed = 50; // ms
+        let animationMode = 'bounce'; // 'bounce' or 'wrap'
+        let showTrail = false;
+        let colorAnimation = false;
+        let boxes = [box]; // Array to track multiple boxes
+        let boxId = 1;
+        
+        // Initialize box position
+        box.style.left = '0px';
+        box.style.top = '0px';
+        
+        function startAnimation() {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('stop-btn').disabled = false;
+            
+            animationInterval = setInterval(updateAnimation, animationSpeed);
+            lastFrameTime = Date.now();
+            
+            console.log('Animation started');
+        }
+        
+        function stopAnimation() {
+            if (!isAnimating) return;
+            
+            isAnimating = false;
+            clearInterval(animationInterval);
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('stop-btn').disabled = true;
+            
+            console.log('Animation stopped');
+        }
+        
+        function resetAnimation() {
+            stopAnimation();
+            
+            // Reset all boxes to starting position
+            boxes.forEach(box => {
+                box.style.left = '0px';
+                box.style.top = '0px';
+            });
+            
+            posX = 0;
+            posY = 0;
+            frameCount = 0;
+            fps = 0;
+            
+            updateStats();
+            console.log('Animation reset');
+        }
+        
+        function updateAnimation() {
+            frameCount++;
+            
+            // Calculate FPS
+            const now = Date.now();
+            const deltaTime = now - lastFrameTime;
+            if (deltaTime >= 1000) {
+                fps = Math.round(frameCount * 1000 / deltaTime);
+                frameCount = 0;
+                lastFrameTime = now;
+            }
+            
+            // Update each box
+            boxes.forEach((box, index) => {
+                let boxX = parseInt(box.style.left) || 0;
+                let boxY = parseInt(box.style.top) || 0;
+                
+                // Apply different speeds to different boxes
+                const boxSpeedX = speedX * (index + 1) * 0.5;
+                const boxSpeedY = speedY * (index + 1) * 0.5;
+                
+                boxX += boxSpeedX;
+                boxY += boxSpeedY;
+                
+                // Handle boundaries based on mode
+                if (animationMode === 'bounce') {
+                    if (boxX <= 0 || boxX >= containerWidth - boxSize) {
+                        speedX = -speedX;
+                    }
+                    if (boxY <= 0 || boxY >= containerHeight - boxSize) {
+                        speedY = -speedY;
+                    }
+                    
+                    // Clamp position
+                    boxX = Math.max(0, Math.min(boxX, containerWidth - boxSize));
+                    boxY = Math.max(0, Math.min(boxY, containerHeight - boxSize));
+                } else { // wrap mode
+                    if (boxX > containerWidth) boxX = -boxSize;
+                    if (boxX < -boxSize) boxX = containerWidth;
+                    if (boxY > containerHeight) boxY = -boxSize;
+                    if (boxY < -boxSize) boxY = containerHeight;
+                }
+                
+                // Update box position
+                box.style.left = boxX + 'px';
+                box.style.top = boxY + 'px';
+                
+                // Update color if enabled
+                if (colorAnimation) {
+                    const hue = (boxX + boxY) % 360;
+                    box.style.backgroundColor = `hsl(${hue}, 70%, 50%)`;
+                }
+                
+                // Create trail if enabled
+                if (showTrail && index === 0) { // Only for first box
+                    createTrail(boxX + boxSize/2, boxY + boxSize/2);
+                }
+                
+                // Update stats with first box position
+                if (index === 0) {
+                    posX = boxX;
+                    posY = boxY;
+                }
+            });
+            
+            updateStats();
+        }
+        
+        function createTrail(x, y) {
+            if (Math.random() > 0.7) return; // Randomly skip some trails
+            
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            
+            // Random color based on position
+            const hue = (x + y) % 360;
+            trail.style.backgroundColor = `hsla(${hue}, 70%, 50%, 0.3)`;
+            
+            container.appendChild(trail);
+            
+            // Remove trail after 1 second
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+            }, 1000);
+        }
+        
+        function updateStats() {
+            document.getElementById('pos-x').textContent = Math.round(posX);
+            document.getElementById('pos-y').textContent = Math.round(posY);
+            document.getElementById('frame-count').textContent = frameCount;
+            document.getElementById('fps').textContent = fps;
+        }
+        
+        function updateSpeed() {
+            const slider = document.getElementById('speed-slider');
+            animationSpeed = parseInt(slider.value);
+            document.getElementById('speed-value').textContent = animationSpeed;
+            
+            // Restart animation with new speed if it's running
+            if (isAnimating) {
+                stopAnimation();
+                startAnimation();
+            }
+            
+            console.log('Animation speed updated to:', animationSpeed, 'ms');
+        }
+        
+        function updateSize() {
+            const slider = document.getElementById('size-slider');
+            boxSize = parseInt(slider.value);
+            document.getElementById('size-value').textContent = boxSize;
+            
+            // Update all boxes
+            boxes.forEach(box => {
+                box.style.width = boxSize + 'px';
+                box.style.height = boxSize + 'px';
+            });
+            
+            console.log('Box size updated to:', boxSize, 'px');
+        }
+        
+        function changeAnimationMode() {
+            animationMode = animationMode === 'bounce' ? 'wrap' : 'bounce';
+            document.getElementById('mode-btn').textContent = `Mode: ${animationMode.charAt(0).toUpperCase() + animationMode.slice(1)}`;
+            console.log('Animation mode changed to:', animationMode);
+        }
+        
+        function toggleTrail() {
+            showTrail = !showTrail;
+            document.getElementById('trail-btn').textContent = `Trail: ${showTrail ? 'On' : 'Off'}`;
+            
+            // Clear existing trails
+            if (!showTrail) {
+                const trails = document.querySelectorAll('.trail');
+                trails.forEach(trail => trail.remove());
+            }
+            
+            console.log('Trail:', showTrail ? 'enabled' : 'disabled');
+        }
+        
+        function toggleColorAnimation() {
+            colorAnimation = !colorAnimation;
+            document.getElementById('color-btn').textContent = `Color Animation: ${colorAnimation ? 'On' : 'Off'}`;
+            
+            // Reset color if turning off
+            if (!colorAnimation) {
+                boxes.forEach(box => {
+                    box.style.backgroundColor = '#4CAF50';
+                });
+            }
+            
+            console.log('Color animation:', colorAnimation ? 'enabled' : 'disabled');
+        }
+        
+        function addBox() {
+            if (boxes.length >= 5) {
+                alert('Maximum 5 boxes allowed');
+                return;
+            }
+            
+            boxId++;
+            const newBox = document.createElement('div');
+            newBox.className = 'animated-box';
+            newBox.id = 'box-' + boxId;
+            newBox.style.width = boxSize + 'px';
+            newBox.style.height = boxSize + 'px';
+            
+            // Random starting position
+            const startX = Math.random() * (containerWidth - boxSize);
+            const startY = Math.random() * (containerHeight - boxSize);
+            newBox.style.left = startX + 'px';
+            newBox.style.top = startY + 'px';
+            
+            // Random color
+            const hue = Math.random() * 360;
+            newBox.style.backgroundColor = `hsl(${hue}, 70%, 50%)`;
+            
+            container.appendChild(newBox);
+            boxes.push(newBox);
+            
+            console.log('Added new box. Total boxes:', boxes.length);
+        }
+        
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

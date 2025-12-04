@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip & Tax Calculator</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f4f8;
+        margin: 0;
+        padding: 40px 0;
+    }
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: 600;
+    }
+    input, select {
+        width: 95%;
+        padding: 10px;
+        margin-top: 5px;
+        font-size: 16px;
+        border: 2px solid #bdc3c7;
+        border-radius: 8px;
+        transition: border-color 0.3s;
+    }
+    input:focus, select:focus { border-color: #2980b9; outline:none; }
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg,#27ae60,#2ecc71);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .output {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #ecf0f1;
+        border: 2px dashed #bdc3c7;
+        min-height: 120px;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>🍽 Tip & Tax Calculator</h1>
+
+    <label for="bill">Bill Amount</label>
+    <input type="number" id="bill" placeholder="Enter bill amount">
+
+    <label for="tax">Tax %</label>
+    <input type="number" id="tax" placeholder="Enter tax %">
+
+    <label for="tip">Tip %</label>
+    <input type="number" id="tip" placeholder="Enter tip %">
+
+    <label for="code">Discount Code (optional)</label>
+    <input type="text" id="code" placeholder="VIP / STUDENT">
+
+    <button onclick="calculateBill()">Calculate</button>
+
+    <div class="output" id="out">Totals will appear here…</div>
+</div>
+
+<script>
+const APP = "BillHelper";
+let lastRunMode = "INIT";
+var legacyFlag = "legacy-var-flag";
+
+function calculateBill() {
+    const billRaw = document.getElementById("bill").value;
+    const taxRaw  = document.getElementById("tax").value;
+    const tipRaw  = document.getElementById("tip").value;
+    const code    = document.getElementById("code").value.trim().toUpperCase();
+
+    const bill = Number(billRaw);
+    const taxP = Number(taxRaw);
+    const tipP = Number(tipRaw);
+
+    // Input validation
+    if(isNaN(bill) || bill<=0 || isNaN(taxP) || taxP<0 || isNaN(tipP) || tipP<0) {
+        document.getElementById("out").textContent = "❌ Invalid inputs!";
+        console.log("Invalid input:", {billRaw, taxRaw, tipRaw});
+        return;
+    }
+
+    // Calculations
+    const taxAmt = bill * (taxP / 100);
+    const tipAmt = bill * (tipP / 100);
+    let total = bill + taxAmt + tipAmt;
+
+    // Assignment chain
+    let reward = 1; reward +=1; reward *=2; reward **=1;
+
+    // Discount rules
+    let discount = 0;
+    const isVIP = (code === "VIP");
+    const isStudent = (code === "STUDENT");
+
+    if(isVIP && (total > 200 || (bill > 150 && tipP >= 10))) { discount = total * 0.10; }
+    if(isStudent && total >=50) { discount += 10; } // combine
+
+    total -= discount;
+
+    // String building
+    const baseLine = `Base=${bill}, Tax=${taxAmt.toFixed(2)}, Tip=${tipAmt.toFixed(2)}`;
+    const finalMessage = `${baseLine}\nDiscount=${discount.toFixed(2)}\nTotal=${total.toFixed(2)}\nReward=${reward}\nCode=${code || "—"} | VIP:${isVIP} | STUDENT:${isStudent}`;
+
+    document.getElementById("out").textContent = finalMessage;
+
+    // Console logs
+    console.log("=== Bill Info ===");
+    console.log(finalMessage);
+    console.log("Types:", typeof bill, typeof taxP, typeof tipP, typeof code);
+    console.log("Assignment chain reward:", reward);
+
+    lastRunMode = "CALC";
+    console.log({APP,lastRunMode,legacyFlag});
+
+    /*
+        Demonstrated:
+        - console.log + comments
+        - var/let/const
+        - data types & typeof
+        - arithmetic, assignment, comparison, logical
+        - string concatenation & template literals
+        - no arrays used
+    */
+}
+</script>
+</body>
+</html>

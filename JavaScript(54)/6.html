@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 6: Select First LI in UL</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { border: 1px solid #ccc; padding: 20px; }
+        li { padding: 5px; margin: 5px; }
+        .highlight { background-color: yellow; font-weight: bold; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Select First LI in UL</h1>
+    
+    <ul id="myList">
+        <li>First list item</li>
+        <li>Second list item</li>
+        <li>Third list item</li>
+        <li>Fourth list item</li>
+        <li>Fifth list item</li>
+    </ul>
+    
+    <button onclick="selectFirstLi()">Select First LI</button>
+    <button onclick="resetList()">Reset List</button>
+    
+    <script>
+        function selectFirstLi() {
+            // Using querySelector with CSS selector to get first li inside ul
+            const firstLi = document.querySelector('ul li:first-child');
+            
+            // Alternative selectors:
+            // document.querySelector('ul > li:first-child')
+            // document.querySelector('#myList li:first-child')
+            // document.querySelector('li:first-of-type')
+            
+            firstLi.classList.add('highlight');
+            console.log('Selected first li:', firstLi.textContent);
+        }
+        
+        function resetList() {
+            const allLi = document.querySelectorAll('ul li');
+            allLi.forEach(li => li.classList.remove('highlight'));
+        }
+    </script>
+</body>
+</html>

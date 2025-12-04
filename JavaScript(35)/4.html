@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 4: Fix Invalid JSON</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        .bad { background: #ffebee; border-left: 4px solid #f44336; }
+        .good { background: #e8f5e9; border-left: 4px solid #4CAF50; }
+        button { margin: 10px; padding: 10px; background: #FF9800; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 4: Fix Invalid JSON</h1>
+    
+    <p>Example of invalid JSON - fix it to work with JSON.parse()</p>
+    
+    <div class="code bad" id="badJson">
+        {name:"Ahmed",age:25}
+    </div>
+    
+    <button onclick="tryParse()">Try to Parse</button>
+    <button onclick="showFixed()">Show Fixed Version</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px;"></div>
+    <div id="fixedJson" class="code good" style="display:none;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function tryParse() {
+            let badJSON = '{name:"Ahmed",age:25}';
+            
+            try {
+                JSON.parse(badJSON);
+                document.getElementById('result').innerHTML = 
+                    '<span style="color:green">✓ JSON is valid!</span>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<span style="color:red">✗ Error: ${error.message}</span>`;
+                console.log('Parse error:', error.message);
+            }
+        }
+        
+        function showFixed() {
+            let fixedJSON = '{"name":"Ahmed","age":25}';
+            
+            document.getElementById('fixedJson').style.display = 'block';
+            document.getElementById('fixedJson').innerHTML = fixedJSON;
+            
+            // Try to parse the fixed version
+            try {
+                let parsed = JSON.parse(fixedJSON);
+                document.getElementById('result').innerHTML = 
+                    `<span style="color:green">✓ Parsed successfully!<br>
+                     Name: ${parsed.name}, Age: ${parsed.age}</span>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<span style="color:red">✗ Still invalid: ${error.message}</span>`;
+            }
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`// Invalid JSON (keys without quotes)
+let badJSON = '{name:"Ahmed",age:25}';
+
+// Try to parse (will throw error)
+try {
+    JSON.parse(badJSON);
+} catch (error) {
+    console.log('Error:', error.message);
+}
+
+// Fixed JSON (keys with quotes)
+let fixedJSON = '{"name":"Ahmed","age":25}';
+
+// Now it works
+let obj = JSON.parse(fixedJSON);
+console.log(obj.name); // "Ahmed"
+console.log(obj.age);  // 25
+
+// Common JSON errors to fix:
+// 1. Keys without quotes: {name:"Ali"} → {"name":"Ali"}
+// 2. Trailing comma: {"a":1,} → {"a":1}
+// 3. Single quotes: {'a':1} → {"a":1}
+// 4. Unquoted strings: {date:2024-01-01} → {"date":"2024-01-01"}`;
+        }
+    </script>
+</body>
+</html>

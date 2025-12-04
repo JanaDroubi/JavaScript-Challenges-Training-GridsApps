@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 54: Tab System</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .tabs-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .tabs-header {
+            display: flex;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-button {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            position: relative;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+        .tab-button:hover {
+            background-color: #e9e9e9;
+            color: #333;
+        }
+        .tab-button.active {
+            background-color: white;
+            color: #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+        }
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: white;
+        }
+        .tab-content {
+            padding: 30px;
+            background-color: white;
+            min-height: 300px;
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tab-content h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .tab-content p {
+            line-height: 1.6;
+            color: #555;
+        }
+        .tab-stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .add-tab-input {
+            padding: 10px;
+            margin: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tab System</h1>
+    <p>Click on tabs to switch between content sections</p>
+    
+    <div class="controls">
+        <input type="text" id="new-tab-title" class="add-tab-input" placeholder="New tab title">
+        <input type="text" id="new-tab-content" class="add-tab-input" placeholder="New tab content">
+        <button onclick="addTab()">Add New Tab</button>
+        <button onclick="removeCurrentTab()">Remove Current Tab</button>
+    </div>
+    
+    <div class="tabs-container">
+        <div class="tabs-header" id="tabs-header">
+            <!-- Tabs will be generated dynamically -->
+        </div>
+        <div class="tab-content" id="tab-content">
+            <!-- Tab content will be generated dynamically -->
+        </div>
+    </div>
+    
+    <div class="tab-stats" id="tab-stats">
+        <strong>Current Tab:</strong> <span id="current-tab-name">Home</span> |
+        <strong>Total Tabs:</strong> <span id="total-tabs">4</span> |
+        <strong>Last Viewed:</strong> <span id="last-viewed">None</span>
+    </div>
+    
+    <div style="margin-top: 20px; text-align: center;">
+        <button onclick="previousTab()">Previous Tab</button>
+        <button onclick="nextTab()">Next Tab</button>
+        <button onclick="goToTab(0)">Go to First Tab</button>
+        <button onclick="goToTab(2)">Go to Third Tab</button>
+    </div>
+    
+    <script>
+        // Tab data
+        let tabs = [
+            {
+                id: 'home',
+                title: 'Home',
+                content: '<h3>Welcome to the Home Tab</h3><p>This is the main content area. You can navigate between tabs using the tab buttons above.</p><p>Each tab contains different information and functionality.</p><ul><li>Tab 1: Home (this tab)</li><li>Tab 2: Features</li><li>Tab 3: About</li><li>Tab 4: Contact</li></ul>'
+            },
+            {
+                id: 'features',
+                title: 'Features',
+                content: '<h3>Features Overview</h3><p>This tab system includes the following features:</p><ul><li>Dynamic tab creation and removal</li><li>Smooth transitions between tabs</li><li>Keyboard navigation (Ctrl+1, Ctrl+2, etc.)</li><li>Tab history tracking</li><li>Responsive design</li><li>Customizable content</li></ul><p>Try adding new tabs using the controls above!</p>'
+            },
+            {
+                id: 'about',
+                title: 'About',
+                content: '<h3>About This Tab System</h3><p>This is a pure JavaScript tab system built using DOM manipulation techniques.</p><p>It demonstrates:</p><ul><li>Dynamic element creation</li><li>Event handling</li><li>CSS transitions and animations</li><li>State management</li><li>LocalStorage for persistence</li></ul><p>The system is built without any external libraries or frameworks.</p>'
+            },
+            {
+                id: 'contact',
+                title: 'Contact',
+                content: '<h3>Contact Information</h3><p>This tab demonstrates how different content can be displayed in each tab.</p><div style="background-color: #e8f5e9; padding: 15px; border-radius: 5px;"><h4>Contact Details:</h4><p><strong>Email:</strong> info@example.com</p><p><strong>Phone:</strong> (123) 456-7890</p><p><strong>Address:</strong> 123 Main Street, City, Country</p></div><p>You can customize each tab with any HTML content you need.</p>'
+            }
+        ];
+        
+        let currentTabIndex = 0;
+        let tabHistory = [0];
+        let tabCounter = 4;
+        
+        function initTabs() {
+            renderTabs();
+            switchTab(currentTabIndex);
+            updateTabStats();
+            saveTabsToStorage();
+            
+            console.log('Tabs initialized with', tabs.length, 'tabs');
+        }
+        
+        function renderTabs() {
+            const tabsHeader = document.getElementById('tabs-header');
+            const tabContent = document.getElementById('tab-content');
+            
+            // Clear existing tabs
+            tabsHeader.innerHTML = '';
+            tabContent.innerHTML = '';
+            
+            // Create tab buttons
+            tabs.forEach((tab, index) => {
+                // Create tab button
+                const tabButton = document.createElement('button');
+                tabButton.className = 'tab-button';
+                tabButton.dataset.index = index;
+                tabButton.textContent = tab.title;
+                tabButton.onclick = () => switchTab(index);
+                
+                // Add close button for non-default tabs
+                if (index >= 4) { // Original 4 tabs cannot be closed
+                    const closeSpan = document.createElement('span');
+                    closeSpan.innerHTML = ' ×';
+                    closeSpan.style.marginLeft = '10px';
+                    closeSpan.style.color = '#999';
+                    closeSpan.style.cursor = 'pointer';
+                    closeSpan.onclick = (e) => {
+                        e.stopPropagation();
+                        removeTab(index);
+                    };
+                    tabButton.appendChild(closeSpan);
+                }
+                
+                tabsHeader.appendChild(tabButton);
+                
+                // Create tab content pane
+                const tabPane = document.createElement('div');
+                tabPane.className = 'tab-pane';
+                tabPane.id = `tab-pane-${tab.id}`;
+                tabPane.innerHTML = tab.content;
+                tabContent.appendChild(tabPane);
+            });
+        }
+        
+        function switchTab(index) {
+            if (index < 0 || index >= tabs.length) return;
+            
+            // Update active tab button
+            document.querySelectorAll('.tab-button').forEach((button, i) => {
+                if (i === index) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            
+            // Update active tab content
+            document.querySelectorAll('.tab-pane').forEach((pane, i) => {
+                if (i === index) {
+                    pane.classList.add('active');
+                } else {
+                    pane.classList.remove('active');
+                }
+            });
+            
+            // Update history
+            if (tabHistory[tabHistory.length - 1] !== index) {
+                tabHistory.push(index);
+                if (tabHistory.length > 10) {
+                    tabHistory.shift(); // Keep only last 10 entries
+                }
+            }
+            
+            currentTabIndex = index;
+            updateTabStats();
+            
+            console.log('Switched to tab:', tabs[index].title, '(Index:', index, ')');
+        }
+        
+        function addTab() {
+            const titleInput = document.getElementById('new-tab-title');
+            const contentInput = document.getElementById('new-tab-content');
+            
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            
+            if (!title) {
+                alert('Please enter a tab title');
+                return;
+            }
+            
+            tabCounter++;
+            const newTab = {
+                id: `tab-${tabCounter}`,
+                title: title,
+                content: content || `<h3>${title}</h3><p>This is the content for the "${title}" tab.</p><p>You can edit this content by modifying the tab data.</p>`
+            };
+            
+            tabs.push(newTab);
+            renderTabs();
+            switchTab(tabs.length - 1);
+            saveTabsToStorage();
+            
+            // Clear inputs
+            titleInput.value = '';
+            contentInput.value = '';
+            
+            console.log('Added new tab:', title);
+        }
+        
+        function removeTab(index) {
+            if (tabs.length <= 1) {
+                alert('Cannot remove the last tab');
+                return;
+            }
+            
+            if (index < 4) {
+                alert('Cannot remove the original 4 tabs');
+                return;
+            }
+            
+            const tabTitle = tabs[index].title;
+            if (confirm(`Remove tab "${tabTitle}"?`)) {
+                tabs.splice(index, 1);
+                
+                // Adjust current tab index if needed
+                if (currentTabIndex >= index && currentTabIndex > 0) {
+                    currentTabIndex--;
+                }
+                
+                renderTabs();
+                switchTab(currentTabIndex);
+                saveTabsToStorage();
+                
+                console.log('Removed tab:', tabTitle);
+            }
+        }
+        
+        function removeCurrentTab() {
+            removeTab(currentTabIndex);
+        }
+        
+        function previousTab() {
+            const newIndex = (currentTabIndex - 1 + tabs.length) % tabs.length;
+            switchTab(newIndex);
+        }
+        
+        function nextTab() {
+            const newIndex = (currentTabIndex + 1) % tabs.length;
+            switchTab(newIndex);
+        }
+        
+        function goToTab(index) {
+            if (index >= 0 && index < tabs.length) {
+                switchTab(index);
+            }
+        }
+        
+        function updateTabStats() {
+            document.getElementById('current-tab-name').textContent = tabs[currentTabIndex].title;
+            document.getElementById('total-tabs').textContent = tabs.length;
+            
+            const lastViewedIndex = tabHistory.length > 1 ? tabHistory[tabHistory.length - 2] : null;
+            if (lastViewedIndex !== null) {
+                document.getElementById('last-viewed').textContent = tabs[lastViewedIndex].title;
+            } else {
+                document.getElementById('last-viewed').textContent = 'None';
+            }
+        }
+        
+        function saveTabsToStorage() {
+            // Only save custom tabs (index >= 4)
+            const customTabs = tabs.slice(4);
+            localStorage.setItem('customTabs', JSON.stringify(customTabs));
+            localStorage.setItem('tabCounter', tabCounter.toString());
+            
+            console.log('Saved tabs to localStorage');
+        }
+        
+        function loadTabsFromStorage() {
+            const savedCustomTabs = localStorage.getItem('customTabs');
+            const savedTabCounter = localStorage.getItem('tabCounter');
+            
+            if (savedCustomTabs) {
+                const customTabs = JSON.parse(savedCustomTabs);
+                tabs = [...tabs.slice(0, 4), ...customTabs];
+                tabCounter = savedTabCounter ? parseInt(savedTabCounter) : 4;
+                console.log('Loaded custom tabs from localStorage:', customTabs.length);
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                // Ctrl+1 through Ctrl+9 for tabs 1-9
+                for (let i = 1; i <= 9; i++) {
+                    if (event.key === `${i}` && tabs.length >= i) {
+                        event.preventDefault();
+                        goToTab(i - 1);
+                        break;
+                    }
+                }
+                
+                // Ctrl+Left for previous tab
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    previousTab();
+                }
+                
+                // Ctrl+Right for next tab
+                if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    nextTab();
+                }
+            }
+        });
+        
+        // Load and initialize tabs
+        window.onload = function() {
+            loadTabsFromStorage();
+            initTabs();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 20: Keyup Event on Input</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; }
+        div { border: 1px solid #ccc; padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Keyup Event Prints Typed Text to Console</h1>
+    
+    <p>Type in the input below and check the console for each keystroke.</p>
+    
+    <input type="text" id="text-input" placeholder="Start typing...">
+    
+    <div id="output">Typed text will appear here too</div>
+    
+    <br>
+    <button onclick="addKeyupEvent()">Add Keyup Listener</button>
+    <button onclick="removeKeyupEvent()">Remove Keyup Listener</button>
+    <button onclick="clearOutput()">Clear Output</button>
+    
+    <script>
+        function handleKeyup(event) {
+            const typedText = event.target.value;
+            console.log('Typed:', typedText);
+            
+            // Also show on page
+            const outputDiv = document.getElementById('output');
+            outputDiv.textContent = 'You typed: ' + typedText;
+        }
+        
+        function addKeyupEvent() {
+            const input = document.getElementById('text-input');
+            input.addEventListener('keyup', handleKeyup);
+            console.log('Keyup event listener added');
+            alert('Keyup listener added! Start typing.');
+        }
+        
+        function removeKeyupEvent() {
+            const input = document.getElementById('text-input');
+            input.removeEventListener('keyup', handleKeyup);
+            console.log('Keyup event listener removed');
+            alert('Keyup listener removed!');
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').textContent = '';
+            document.getElementById('text-input').value = '';
+        }
+    </script>
+</body>
+</html>

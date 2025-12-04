@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 13: Add Class with classList.add()</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 20px; margin: 10px; border: 1px solid #ccc; }
+        .active { background-color: yellow; border: 3px solid orange; font-weight: bold; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Add "active" Class to Element</h1>
+    
+    <div id="target-element">This is the target element</div>
+    
+    <button onclick="addActiveClass()">Add "active" Class</button>
+    <button onclick="removeActiveClass()">Remove "active" Class</button>
+    
+    <script>
+        function addActiveClass() {
+            const element = document.getElementById('target-element');
+            element.classList.add('active');
+            console.log('Added "active" class to element');
+        }
+        
+        function removeActiveClass() {
+            const element = document.getElementById('target-element');
+            element.classList.remove('active');
+            console.log('Removed "active" class from element');
+        }
+    </script>
+</body>
+</html>

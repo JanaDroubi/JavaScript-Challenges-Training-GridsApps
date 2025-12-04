@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 11: Change Button Color on Load</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 15px; }
+    </style>
+</head>
+<body onload="changeButtonColor()">
+    <h1>Button Color Changes When Page Loads</h1>
+    
+    <p>The button below should have a different background color when the page loads.</p>
+    
+    <button id="color-button">My color changes on page load</button>
+    <button onclick="resetButton()">Reset Button Color</button>
+    
+    <script>
+        function changeButtonColor() {
+            const button = document.getElementById('color-button');
+            button.style.backgroundColor = '#4CAF50';
+            button.style.color = 'white';
+            console.log('Button color changed on page load');
+        }
+        
+        function resetButton() {
+            const button = document.getElementById('color-button');
+            button.style.backgroundColor = '';
+            button.style.color = '';
+        }
+    </script>
+</body>
+</html>

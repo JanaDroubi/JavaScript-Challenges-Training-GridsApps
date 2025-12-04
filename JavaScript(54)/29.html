@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 29: Get Next Sibling</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { padding: 15px; margin: 5px; border: 1px solid #ccc; cursor: pointer; }
+        .clicked { background-color: lightblue; }
+        .next-sibling { background-color: lightgreen; border: 2px solid green; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get Next Sibling of Clicked Element</h1>
+    
+    <p>Click any box below to see its next sibling</p>
+    
+    <div id="box1">Box 1 - Click me</div>
+    <div id="box2">Box 2 - Click me</div>
+    <div id="box3">Box 3 - Click me</div>
+    <div id="box4">Box 4 - Click me</div>
+    <div id="box5">Box 5 - Click me (last, no next sibling)</div>
+    
+    <button onclick="addClickListeners()">Add Click Listeners</button>
+    <button onclick="removeClickListeners()">Remove Click Listeners</button>
+    <button onclick="resetBoxes()">Reset Boxes</button>
+    
+    <script>
+        function handleClick(event) {
+            // Clear previous highlights
+            const allBoxes = document.querySelectorAll('div[id^="box"]');
+            allBoxes.forEach(box => {
+                box.classList.remove('clicked');
+                box.classList.remove('next-sibling');
+            });
+            
+            // Highlight clicked element
+            event.target.classList.add('clicked');
+            
+            // Get next sibling
+            const nextSibling = event.target.nextElementSibling;
+            
+            if (nextSibling) {
+                nextSibling.classList.add('next-sibling');
+                console.log('Clicked element:', event.target.id);
+                console.log('Next sibling:', nextSibling.id);
+                alert('Clicked: ' + event.target.id + '\nNext sibling: ' + nextSibling.id);
+            } else {
+                console.log('Clicked element:', event.target.id);
+                console.log('No next sibling available');
+                alert('Clicked: ' + event.target.id + '\nNo next sibling (last element)');
+            }
+        }
+        
+        function addClickListeners() {
+            const allBoxes = document.querySelectorAll('div[id^="box"]');
+            allBoxes.forEach(box => {
+                box.addEventListener('click', handleClick);
+            });
+            console.log('Click listeners added to all boxes');
+            alert('Click listeners added! Click any box.');
+        }
+        
+        function removeClickListeners() {
+            const allBoxes = document.querySelectorAll('div[id^="box"]');
+            allBoxes.forEach(box => {
+                box.removeEventListener('click', handleClick);
+            });
+            console.log('Click listeners removed from all boxes');
+            alert('Click listeners removed!');
+        }
+        
+        function resetBoxes() {
+            const allBoxes = document.querySelectorAll('div[id^="box"]');
+            allBoxes.forEach(box => {
+                box.classList.remove('clicked');
+                box.classList.remove('next-sibling');
+            });
+        }
+    </script>
+</body>
+</html>

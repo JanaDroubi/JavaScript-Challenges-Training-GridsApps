@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 38: Auto-disappearing Notification</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        .notification {
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            transition: opacity 0.5s;
+        }
+        .success { background-color: #4CAF50; }
+        .warning { background-color: #ff9800; }
+        .info { background-color: #2196F3; }
+        .error { background-color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>Auto-disappearing Notification</h1>
+    
+    <div id="notification-area"></div>
+    
+    <button onclick="showSuccess()">Show Success Notification</button>
+    <button onclick="showWarning()">Show Warning Notification</button>
+    <button onclick="showInfo()">Show Info Notification</button>
+    <button onclick="showError()">Show Error Notification</button>
+    
+    <script>
+        function createNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Add timestamp
+            const time = new Date().toLocaleTimeString();
+            const timeSpan = document.createElement('span');
+            timeSpan.textContent = ` [${time}]`;
+            timeSpan.style.fontSize = '0.8em';
+            timeSpan.style.opacity = '0.8';
+            notification.appendChild(timeSpan);
+            
+            // Append to notification area
+            const area = document.getElementById('notification-area');
+            area.appendChild(notification);
+            
+            console.log('Created notification:', message);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                    console.log('Removed notification:', message);
+                }, 500); // Wait for fade out
+            }, 3000);
+        }
+        
+        function showSuccess() {
+            createNotification('Success! Your action was completed successfully.', 'success');
+        }
+        
+        function showWarning() {
+            createNotification('Warning! Please check your input.', 'warning');
+        }
+        
+        function showInfo() {
+            createNotification('Information: This is an informational message.', 'info');
+        }
+        
+        function showError() {
+            createNotification('Error! Something went wrong. Please try again.', 'error');
+        }
+    </script>
+</body>
+</html>

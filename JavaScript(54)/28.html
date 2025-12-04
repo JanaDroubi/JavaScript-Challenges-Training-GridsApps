@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 28: Get All Children of UL</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        ul { border: 2px solid green; padding: 20px; }
+        li { padding: 5px; margin: 3px; }
+        .highlight { background-color: lightgreen; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get All Children of UL Element</h1>
+    
+    <ul id="my-list">
+        <li>First list item</li>
+        <li>Second list item</li>
+        <li>Third list item</li>
+        <li>Fourth list item</li>
+    </ul>
+    
+    <button onclick="showChildren()">Show UL Children</button>
+    <button onclick="highlightChildren()">Highlight Children</button>
+    <button onclick="resetChildren()">Reset Children</button>
+    
+    <script>
+        function showChildren() {
+            const ul = document.getElementById('my-list');
+            const children = ul.children;
+            
+            console.log('UL element:', ul);
+            console.log('Number of children:', children.length);
+            
+            for (let i = 0; i < children.length; i++) {
+                console.log('Child ' + i + ':', children[i].textContent);
+            }
+            
+            alert('UL has ' + children.length + ' children (check console)');
+        }
+        
+        function highlightChildren() {
+            const ul = document.getElementById('my-list');
+            const children = ul.children;
+            
+            for (let i = 0; i < children.length; i++) {
+                children[i].classList.add('highlight');
+            }
+        }
+        
+        function resetChildren() {
+            const ul = document.getElementById('my-list');
+            const children = ul.children;
+            
+            for (let i = 0; i < children.length; i++) {
+                children[i].classList.remove('highlight');
+            }
+        }
+    </script>
+</body>
+</html>

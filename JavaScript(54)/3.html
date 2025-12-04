@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 3: Change Items Color to Blue</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .item { padding: 10px; margin: 5px; border: 1px solid #ccc; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Change All Items to Blue</h1>
+    
+    <div class="item">Item 1 with class "item"</div>
+    <div class="item">Item 2 with class "item"</div>
+    <div class="other">This div has class "other"</div>
+    <div class="item">Item 3 with class "item"</div>
+    <div class="item">Item 4 with class "item"</div>
+    <div class="different">This div has class "different"</div>
+    
+    <button onclick="changeItemsToBlue()">Change Items to Blue</button>
+    <button onclick="resetColors()">Reset Colors</button>
+    
+    <script>
+        function changeItemsToBlue() {
+            const items = document.getElementsByClassName('item');
+            
+            // Convert HTMLCollection to array to use forEach
+            Array.from(items).forEach(item => {
+                item.style.color = 'blue';
+                item.style.borderColor = 'blue';
+                item.style.backgroundColor = '#e3f2fd';
+            });
+        }
+        
+        function resetColors() {
+            const items = document.getElementsByClassName('item');
+            
+            Array.from(items).forEach(item => {
+                item.style.color = 'black';
+                item.style.borderColor = '#ccc';
+                item.style.backgroundColor = 'transparent';
+            });
+        }
+    </script>
+</body>
+</html>

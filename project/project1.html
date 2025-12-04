@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small JS Project - User Card & Smart Calculator</title>
+    <style>
+        /* ====== General Styles ====== */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #2980b9;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            flex: 1 1 45%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-user {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+
+        .btn-calc {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            background: #ecf0f1;
+            min-height: 120px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Small JS Project</h1>
+            <p>User Card + Smart Calculator</p>
+        </header>
+
+        <!-- ===== User Card Section ===== -->
+        <div class="section" id="user-card-section">
+            <h2>👤 User Card</h2>
+            <div class="form-group">
+                <label for="userName">Name:</label>
+                <input type="text" id="userName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="userAge">Age:</label>
+                <input type="number" id="userAge" placeholder="Enter your age">
+            </div>
+            <button class="btn-user" onclick="createUserCard()">Create User Card</button>
+            <div class="output" id="userCardOutput">User card output will appear here...</div>
+        </div>
+
+        <!-- ===== Smart Calculator Section ===== -->
+        <div class="section" id="calculator-section">
+            <h2>🧮 Smart Calculator</h2>
+            <div class="form-group">
+                <label for="num1">First Number:</label>
+                <input type="number" id="num1" placeholder="Enter first number">
+            </div>
+            <div class="form-group">
+                <label for="num2">Second Number:</label>
+                <input type="number" id="num2" placeholder="Enter second number">
+            </div>
+            <div class="buttons">
+                <button class="btn-calc" onclick="calculate('+')">Add (+)</button>
+                <button class="btn-calc" onclick="calculate('-')">Subtract (-)</button>
+                <button class="btn-calc" onclick="calculate('*')">Multiply (*)</button>
+                <button class="btn-calc" onclick="calculate('/')">Divide (/)</button>
+                <button class="btn-calc" onclick="calculate('%')">Modulus (%)</button>
+                <button class="btn-calc" onclick="logicalOperations()">Logical Ops</button>
+                <button class="btn-calc" onclick="stringOperations()">String Ops</button>
+            </div>
+            <div class="output" id="calcOutput">Calculation output will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Variables & Constants =====
+        var projectName = "Small JS Project";
+        let userCount = 0;
+        const PI = 3.14159;
+        const MAX_AGE = 120;
+
+        // ===== User Card Function =====
+        function createUserCard() {
+            const name = document.getElementById('userName').value || "Guest";
+            const age = document.getElementById('userAge').value || "Unknown";
+
+            const message = `
+===== User Card =====
+Hello ${name}!
+Age: ${age}
+Project: ${projectName}
+===================
+`;
+            document.getElementById('userCardOutput').textContent = message;
+
+            console.log("=== User Info ===");
+            console.log("Name:", name, "Type:", typeof name);
+            console.log("Age:", age, "Type:", typeof age);
+
+            userCount++;
+            console.log("Total users so far:", userCount);
+        }
+
+        // ===== Calculator Functions =====
+        function calculate(op) {
+            const a = parseFloat(document.getElementById('num1').value) || 0;
+            const b = parseFloat(document.getElementById('num2').value) || 0;
+            let result;
+
+            switch(op) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = b !== 0 ? (a / b).toFixed(2) : "Undefined (div by 0)"; break;
+                case '%': result = b !== 0 ? a % b : "Undefined"; break;
+            }
+
+            const output = `Result: ${a} ${op} ${b} = ${result}`;
+            document.getElementById('calcOutput').textContent = output;
+            console.log(output);
+        }
+
+        function logicalOperations() {
+            const a = parseFloat(document.getElementById('num1').value) || 0;
+            const b = parseFloat(document.getElementById('num2').value) || 0;
+            let output = "=== Logical Operations ===\n";
+            output += `${a} > ${b}: ${a > b}\n`;
+            output += `${a} < ${b}: ${a < b}\n`;
+            output += `(${a} > 0 && ${b} > 0): ${a>0 && b>0}\n`;
+            output += `(${a} > 0 || ${b} > 0): ${a>0 || b>0}\n`;
+            output += `!(${a} > 0): ${!(a>0)}\n`;
+            document.getElementById('calcOutput').textContent = output;
+            console.log(output);
+        }
+
+        function stringOperations() {
+            const a = document.getElementById('num1').value || "0";
+            const b = document.getElementById('num2').value || "0";
+            let output = "=== String Operations ===\n";
+            output += `"${a}" + "${b}" = "${a + b}"\n`;
+            output += `Using template literal: Result = ${a}${b}\n`;
+            document.getElementById('calcOutput').textContent = output;
+            console.log(output);
+        }
+
+        console.log("Project Loaded Successfully!");
+        console.log("PI =", PI, "MAX_AGE =", MAX_AGE);
+    </script>
+</body>
+</html>

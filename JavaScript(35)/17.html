@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 17: Formatted JSON</title></head>
+<body>
+<h1>Format JSON with Spaces (Pretty Print)</h1>
+<button onclick="formatJSON()">Format JSON</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result" style="white-space: pre-wrap; background:#f5f5f5; padding:10px;"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function formatJSON() {
+    let product = {
+        id: 1,
+        name: "Laptop",
+        price: 999.99,
+        specs: {
+            cpu: "Intel i7",
+            ram: "16GB",
+            storage: ["512GB SSD", "1TB HDD"]
+        },
+        inStock: true
+    };
+    
+    // Without formatting
+    let compact = JSON.stringify(product);
+    
+    // With 2-space formatting
+    let pretty = JSON.stringify(product, null, 2);
+    
+    // With 4-space formatting
+    let veryPretty = JSON.stringify(product, null, 4);
+    
+    // With tab formatting
+    let tabbed = JSON.stringify(product, null, '\t');
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>Compact (no spaces):</strong>\n${compact}\n\n
+         <strong>Pretty (2 spaces):</strong>\n${pretty}\n\n
+         <strong>Very Pretty (4 spaces):</strong>\n${veryPretty}\n\n
+         <strong>Tabbed:</strong>\n${tabbed}\n\n
+         <strong>Length comparison:</strong>
+         Compact: ${compact.length} chars
+         Pretty: ${pretty.length} chars`;
+    
+    console.log('Compact:', compact);
+    console.log('Pretty:', pretty);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let obj = {a: 1, b: 2, c: {d: 3, e: 4}};
+
+// Compact (no formatting)
+let compact = JSON.stringify(obj);
+console.log(compact); // '{"a":1,"b":2,"c":{"d":3,"e":4}}'
+
+// With 2 spaces (readable)
+let pretty = JSON.stringify(obj, null, 2);
+console.log(pretty);
+/*
+{
+  "a": 1,
+  "b": 2,
+  "c": {
+    "d": 3,
+    "e": 4
+  }
+}
+*/
+
+// With 4 spaces
+let veryPretty = JSON.stringify(obj, null, 4);
+
+// With tabs
+let tabbed = JSON.stringify(obj, null, '\\t');
+
+// Custom spacing
+let custom = JSON.stringify(obj, null, '---');
+console.log(custom);
+/*
+{
+---"a": 1,
+---"b": 2,
+---"c": {
+------"d": 3,
+------"e": 4
+---}
+}
+*/
+
+// The third parameter controls indentation
+// null or 0: no formatting
+// number: number of spaces
+// string: custom indentation string`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

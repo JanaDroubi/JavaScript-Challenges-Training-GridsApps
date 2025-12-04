@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 2: Change Second Paragraph</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        p { border: 1px solid #ddd; padding: 10px; margin: 10px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Change Second Paragraph Text</h1>
+    <p>First paragraph - This is the original text.</p>
+    <p>Second paragraph - This text will change.</p>
+    <p>Third paragraph - This will remain unchanged.</p>
+    <p>Fourth paragraph - This will also remain.</p>
+    
+    <button onclick="changeSecondPara()">Change Second Paragraph</button>
+    <button onclick="resetText()">Reset Text</button>
+    
+    <script>
+        function changeSecondPara() {
+            const allParagraphs = document.getElementsByTagName('p');
+            // Arrays are 0-indexed, so second paragraph is index 1
+            allParagraphs[1].textContent = 'Second paragraph - TEXT CHANGED!';
+            allParagraphs[1].style.backgroundColor = '#e0f7fa';
+        }
+        
+        function resetText() {
+            const allParagraphs = document.getElementsByTagName('p');
+            allParagraphs[0].textContent = 'First paragraph - This is the original text.';
+            allParagraphs[1].textContent = 'Second paragraph - This text will change.';
+            allParagraphs[2].textContent = 'Third paragraph - This will remain unchanged.';
+            allParagraphs[3].textContent = 'Fourth paragraph - This will also remain.';
+            
+            // Reset background
+            allParagraphs[1].style.backgroundColor = 'transparent';
+        }
+    </script>
+</body>
+</html>

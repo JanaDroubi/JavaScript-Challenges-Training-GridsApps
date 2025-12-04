@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 50: FAQ Accordion</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .faq-container { margin: 20px 0; }
+        .faq-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 15px;
+            background-color: #f5f5f5;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .faq-question:hover {
+            background-color: #e9e9e9;
+        }
+        .faq-question.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .faq-answer.open {
+            padding: 15px;
+            max-height: 500px;
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+        button { margin: 10px; padding: 10px; }
+        .controls { margin: 20px 0; }
+        .all-open .faq-answer {
+            max-height: 500px !important;
+            padding: 15px !important;
+        }
+        .all-closed .faq-answer {
+            max-height: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>FAQ Accordion</h1>
+    
+    <div class="controls">
+        <button onclick="expandAll()">Expand All</button>
+        <button onclick="collapseAll()">Collapse All</button>
+        <button onclick="addNewFAQ()">Add New FAQ</button>
+    </div>
+    
+    <div class="faq-container" id="faq-container">
+        <!-- FAQ items will be generated dynamically -->
+    </div>
+    
+    <script>
+        // FAQ data
+        const faqData = [
+            {
+                question: "What is JavaScript?",
+                answer: "JavaScript is a versatile programming language commonly used for creating interactive effects within web browsers. It's one of the core technologies of the World Wide Web, alongside HTML and CSS."
+            },
+            {
+                question: "What is DOM?",
+                answer: "DOM stands for Document Object Model. It's a programming interface for web documents that represents the page so that programs can change the document structure, style, and content."
+            },
+            {
+                question: "How do I select elements in the DOM?",
+                answer: "You can select elements using various methods: getElementById, getElementsByClassName, getElementsByTagName, querySelector, and querySelectorAll. Each method serves different selection needs."
+            },
+            {
+                question: "What are event listeners?",
+                answer: "Event listeners are functions that wait for a specific event to occur on an element, such as a click, mouseover, or keypress. When the event occurs, the listener function executes."
+            },
+            {
+                question: "How do I create elements dynamically?",
+                answer: "You can create elements dynamically using document.createElement(), then modify their properties and append them to the DOM using methods like appendChild(), insertBefore(), or prepend()."
+            }
+        ];
+        
+        function initFAQ() {
+            const container = document.getElementById('faq-container');
+            container.innerHTML = '';
+            
+            faqData.forEach((item, index) => {
+                createFAQItem(item.question, item.answer, index);
+            });
+            
+            console.log('FAQ initialized with', faqData.length, 'items');
+        }
+        
+        function createFAQItem(question, answer, index) {
+            const container = document.getElementById('faq-container');
+            
+            // Create FAQ item
+            const faqItem = document.createElement('div');
+            faqItem.className = 'faq-item';
+            faqItem.dataset.index = index;
+            
+            // Create question
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'faq-question';
+            questionDiv.innerHTML = `
+                <span>${question}</span>
+                <span class="arrow">▼</span>
+            `;
+            
+            // Create answer
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'faq-answer';
+            answerDiv.innerHTML = `<p>${answer}</p>`;
+            
+            // Add click event to question
+            questionDiv.addEventListener('click', function() {
+                const isOpen = answerDiv.classList.contains('open');
+                
+                // Close all other FAQ items
+                if (!event.ctrlKey) { // Allow multiple open with Ctrl key
+                    document.querySelectorAll('.faq-answer').forEach(ans => {
+                        ans.classList.remove('open');
+                    });
+                    document.querySelectorAll('.faq-question').forEach(q => {
+                        q.classList.remove('active');
+                        q.querySelector('.arrow').classList.remove('active');
+                    });
+                }
+                
+                // Toggle current item
+                if (!isOpen) {
+                    answerDiv.classList.add('open');
+                    questionDiv.classList.add('active');
+                    questionDiv.querySelector('.arrow').classList.add('active');
+                    console.log('Opened FAQ:', question);
+                } else {
+                    answerDiv.classList.remove('open');
+                    questionDiv.classList.remove('active');
+                    questionDiv.querySelector('.arrow').classList.remove('active');
+                    console.log('Closed FAQ:', question);
+                }
+            });
+            
+            // Assemble FAQ item
+            faqItem.appendChild(questionDiv);
+            faqItem.appendChild(answerDiv);
+            container.appendChild(faqItem);
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.faq-answer').forEach(answer => {
+                answer.classList.add('open');
+            });
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.classList.add('active');
+                question.querySelector('.arrow').classList.add('active');
+            });
+            console.log('Expanded all FAQ items');
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.faq-answer').forEach(answer => {
+                answer.classList.remove('open');
+            });
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.classList.remove('active');
+                question.querySelector('.arrow').classList.remove('active');
+            });
+            console.log('Collapsed all FAQ items');
+        }
+        
+        function addNewFAQ() {
+            const question = prompt('Enter the new FAQ question:');
+            if (!question) return;
+            
+            const answer = prompt('Enter the answer:');
+            if (!answer) return;
+            
+            const newIndex = faqData.length;
+            faqData.push({ question, answer });
+            createFAQItem(question, answer, newIndex);
+            
+            console.log('Added new FAQ:', question);
+        }
+        
+        // Initialize FAQ on page load
+        window.onload = initFAQ;
+    </script>
+</body>
+</html>

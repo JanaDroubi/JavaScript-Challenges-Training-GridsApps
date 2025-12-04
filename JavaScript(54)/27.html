@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 27: Get Parent Element</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { border: 2px solid blue; padding: 20px; margin: 10px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Get Parent Element of Button</h1>
+    
+    <div id="parent-div">
+        <p>This div contains the button below</p>
+        <button id="child-button">Click to see my parent</button>
+    </div>
+    
+    <button onclick="showParent()">Show Button's Parent</button>
+    <button onclick="highlightParent()">Highlight Parent</button>
+    
+    <script>
+        function showParent() {
+            const button = document.getElementById('child-button');
+            const parent = button.parentElement;
+            
+            console.log('Button:', button);
+            console.log('Parent element:', parent);
+            console.log('Parent ID:', parent.id);
+            console.log('Parent tag:', parent.tagName);
+            
+            alert('Parent element: ' + parent.tagName + ' (ID: ' + parent.id + ')');
+        }
+        
+        function highlightParent() {
+            const button = document.getElementById('child-button');
+            const parent = button.parentElement;
+            
+            parent.style.backgroundColor = 'yellow';
+            setTimeout(() => {
+                parent.style.backgroundColor = '';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 36: Create Input and Insert Before</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        div { border: 1px solid #ccc; padding: 15px; margin: 10px; }
+        input { margin: 10px; padding: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <h1>Create Text Input and Insert Before Another Element</h1>
+    
+    <div id="container">
+        <div id="target-div" style="background-color: #ffe6e6;">
+            <p>This is the target div (new inputs will be inserted before this)</p>
+        </div>
+    </div>
+    
+    <button onclick="createInputBefore()">Create Input Before Target</button>
+    <button onclick="clearInputs()">Remove All Inputs</button>
+    
+    <script>
+        let inputCount = 0;
+        
+        function createInputBefore() {
+            inputCount++;
+            
+            // Create new input element
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.placeholder = 'Dynamic Input ' + inputCount;
+            newInput.id = 'input-' + inputCount;
+            
+            // Add some styling
+            newInput.style.border = '2px solid #4CAF50';
+            newInput.style.borderRadius = '4px';
+            
+            // Get target element
+            const targetDiv = document.getElementById('target-div');
+            
+            // Insert before target element
+            targetDiv.parentNode.insertBefore(newInput, targetDiv);
+            
+            console.log('Created new input and inserted before target:', newInput);
+            console.log('Target element:', targetDiv);
+        }
+        
+        function clearInputs() {
+            // Remove all dynamically created inputs
+            const inputs = document.querySelectorAll('input[id^="input-"]');
+            inputs.forEach(input => input.remove());
+            inputCount = 0;
+            console.log('Removed all dynamic inputs');
+        }
+    </script>
+</body>
+</html>

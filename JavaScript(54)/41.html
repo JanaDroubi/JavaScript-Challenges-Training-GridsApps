@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 41: Dynamic To-Do with Delete/Edit</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input, button { margin: 10px; padding: 10px; }
+        #todo-list { margin: 20px 0; }
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .todo-text { flex-grow: 1; }
+        .todo-actions button { margin: 0 5px; padding: 5px 10px; }
+        .completed { text-decoration: line-through; color: #888; }
+        .edit-input { flex-grow: 1; margin: 0 10px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Dynamic To-Do with Delete & Edit</h1>
+    
+    <div>
+        <input type="text" id="todo-input" placeholder="Enter new to-do...">
+        <button onclick="addTodo()">Add Todo</button>
+    </div>
+    
+    <div id="todo-list"></div>
+    
+    <script>
+        let todoId = 0;
+        
+        function addTodo() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Please enter a to-do item');
+                return;
+            }
+            
+            todoId++;
+            
+            // Create todo item container
+            const todoItem = document.createElement('div');
+            todoItem.className = 'todo-item';
+            todoItem.id = 'todo-' + todoId;
+            
+            // Create text span
+            const textSpan = document.createElement('span');
+            textSpan.className = 'todo-text';
+            textSpan.textContent = text;
+            textSpan.onclick = function() {
+                this.classList.toggle('completed');
+            };
+            
+            // Create actions container
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'todo-actions';
+            
+            // Create edit button
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Edit';
+            editBtn.onclick = function() {
+                editTodo(todoItem, textSpan);
+            };
+            
+            // Create delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.style.backgroundColor = '#ff6b6b';
+            deleteBtn.style.color = 'white';
+            deleteBtn.onclick = function() {
+                todoItem.remove();
+                console.log('Deleted todo:', text);
+            };
+            
+            // Assemble todo item
+            actionsDiv.appendChild(editBtn);
+            actionsDiv.appendChild(deleteBtn);
+            
+            todoItem.appendChild(textSpan);
+            todoItem.appendChild(actionsDiv);
+            
+            // Add to list
+            document.getElementById('todo-list').appendChild(todoItem);
+            
+            console.log('Added todo:', text);
+            input.value = '';
+        }
+        
+        function editTodo(todoItem, textSpan) {
+            const currentText = textSpan.textContent;
+            
+            // Create input for editing
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.className = 'edit-input';
+            editInput.value = currentText;
+            
+            // Replace text with input
+            const actionsDiv = todoItem.querySelector('.todo-actions');
+            todoItem.replaceChild(editInput, textSpan);
+            
+            // Change edit button to save button
+            const editBtn = actionsDiv.querySelector('button');
+            editBtn.textContent = 'Save';
+            editBtn.onclick = function() {
+                const newText = editInput.value.trim();
+                if (newText) {
+                    textSpan.textContent = newText;
+                    todoItem.replaceChild(textSpan, editInput);
+                    editBtn.textContent = 'Edit';
+                    editBtn.onclick = function() {
+                        editTodo(todoItem, textSpan);
+                    };
+                    console.log('Edited todo:', currentText, '→', newText);
+                }
+            };
+            
+            // Focus on input
+            editInput.focus();
+            
+            // Save on Enter key
+            editInput.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    editBtn.click();
+                }
+            };
+        }
+    </script>
+</body>
+</html>

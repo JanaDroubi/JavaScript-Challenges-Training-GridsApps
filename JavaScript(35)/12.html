@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 12: Object with Array</title></head>
+<body>
+<h1>Convert Object with Array to JSON</h1>
+<button onclick="createObject()">Create Object & Convert</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+function createObject() {
+    let person = {
+        name: "Ahmed",
+        skills: ["JavaScript", "HTML", "CSS"]
+    };
+    let json = JSON.stringify(person);
+    
+    document.getElementById('result').innerHTML = 
+        `<strong>Object:</strong><br>
+         Name: ${person.name}<br>
+         Skills: ${person.skills.join(', ')}<br><br>
+         <strong>JSON:</strong> ${json}<br>
+         <strong>Length:</strong> ${json.length} characters`;
+    
+    console.log('Object:', person);
+    console.log('JSON:', json);
+}
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`let person = {
+    name: "Ahmed",
+    skills: ["JavaScript", "HTML", "CSS"]
+};
+let json = JSON.stringify(person);
+console.log(json);
+// '{"name":"Ahmed","skills":["JavaScript","HTML","CSS"]}'
+
+// Arrays in JSON
+let array = ["a", "b", "c"];
+let arrayJson = JSON.stringify(array);
+console.log(arrayJson); // '["a","b","c"]'`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>

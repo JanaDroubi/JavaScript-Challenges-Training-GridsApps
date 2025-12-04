@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 48: Image Slider/Carousel</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .prev-btn, .next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+        }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+        .prev-btn:hover, .next-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .dots {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .dot.active {
+            background-color: #4CAF50;
+        }
+        .slider-info {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Slider/Carousel</h1>
+    
+    <div class="slider-container">
+        <div class="slider" id="slider"></div>
+        <button class="prev-btn" onclick="prevSlide()">❮</button>
+        <button class="next-btn" onclick="nextSlide()">❯</button>
+    </div>
+    
+    <div class="slider-info">
+        Slide <span id="current-slide">1</span> of <span id="total-slides">0</span>
+    </div>
+    
+    <div class="dots" id="dots-container"></div>
+    
+    <div class="slider-controls">
+        <button class="btn" onclick="prevSlide()">Previous</button>
+        <button class="btn" onclick="playPauseSlider()" id="play-pause-btn">Pause</button>
+        <button class="btn" onclick="nextSlide()">Next</button>
+    </div>
+    
+    <button class="btn" onclick="addSlide()">Add New Slide</button>
+    
+    <script>
+        // Slider data
+        const slidesData = [
+            {
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+                caption: "Beautiful Mountain Landscape"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+                caption: "Starry Night Sky"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+                caption: "Ocean Beach Sunset"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000",
+                caption: "Forest Path in Autumn"
+            }
+        ];
+        
+        let currentSlide = 0;
+        let autoPlayInterval;
+        let isPlaying = true;
+        
+        function initSlider() {
+            const slider = document.getElementById('slider');
+            const dotsContainer = document.getElementById('dots-container');
+            
+            // Clear existing content
+            slider.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            // Create slides
+            slidesData.forEach((slide, index) => {
+                // Create slide element
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.dataset.index = index;
+                
+                slideDiv.innerHTML = `
+                    <img src="${slide.image}" alt="${slide.caption}">
+                    <div class="slide-caption">${slide.caption}</div>
+                `;
+                
+                slider.appendChild(slideDiv);
+                
+                // Create dot
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (index === 0) dot.classList.add('active');
+                dot.dataset.index = index;
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+            
+            // Update slider info
+            document.getElementById('total-slides').textContent = slidesData.length;
+            updateSliderInfo();
+            
+            // Start autoplay
+            startAutoPlay();
+            
+            console.log('Slider initialized with', slidesData.length, 'slides');
+        }
+        
+        function goToSlide(index) {
+            if (index < 0 || index >= slidesData.length) return;
+            
+            currentSlide = index;
+            updateSliderPosition();
+            updateSliderInfo();
+            updateDots();
+            resetAutoPlay();
+            
+            console.log('Went to slide:', currentSlide + 1);
+        }
+        
+        function updateSliderPosition() {
+            const slider = document.getElementById('slider');
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+        
+        function updateSliderInfo() {
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+        
+        function updateDots() {
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slidesData.length;
+            updateSliderPosition();
+            updateSliderInfo();
+            updateDots();
+            resetAutoPlay();
+            
+            console.log('Next slide:', currentSlide + 1);
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slidesData.length) % slidesData.length;
+            updateSliderPosition();
+            updateSliderInfo();
+            updateDots();
+            resetAutoPlay();
+            
+            console.log('Previous slide:', currentSlide + 1);
+        }
+        
+        function startAutoPlay() {
+            if (isPlaying) {
+                autoPlayInterval = setInterval(nextSlide, 3000);
+                document.getElementById('play-pause-btn').textContent = 'Pause';
+            }
+        }
+        
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+            document.getElementById('play-pause-btn').textContent = 'Play';
+        }
+        
+        function resetAutoPlay() {
+            if (isPlaying) {
+                clearInterval(autoPlayInterval);
+                startAutoPlay();
+            }
+        }
+        
+        function playPauseSlider() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                startAutoPlay();
+            } else {
+                stopAutoPlay();
+            }
+            console.log('Autoplay:', isPlaying ? 'playing' : 'paused');
+        }
+        
+        function addSlide() {
+            const newSlideNumber = slidesData.length + 1;
+            slidesData.push({
+                image: `https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=400&fit=crop&random=${newSlideNumber}`,
+                caption: `New Slide ${newSlideNumber} - Added dynamically`
+            });
+            
+            initSlider();
+            goToSlide(slidesData.length - 1);
+            
+            console.log('Added new slide. Total slides:', slidesData.length);
+        }
+        
+        // Initialize slider on page load
+        window.onload = initSlider;
+    </script>
+</body>
+</html>

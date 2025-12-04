@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 1: JSON.parse() Basics</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #4CAF50; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 1: Parse JSON to Object</h1>
+    
+    <div class="code">
+        <p>let data = '{"name":"John","age":30}';</p>
+    </div>
+    
+    <p>Use JSON.parse() to convert JSON string to object and print name value</p>
+    
+    <button onclick="parseJSON()">Parse JSON</button>
+    <button onclick="showResult()">Show Result</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#e8f5e9;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function parseJSON() {
+            let data = '{"name":"John","age":30}';
+            let obj = JSON.parse(data);
+            
+            document.getElementById('result').innerHTML = 
+                `Name: ${obj.name}<br>Age: ${obj.age}`;
+            
+            console.log('Parsed object:', obj);
+            console.log('Name:', obj.name);
+            console.log('Age:', obj.age);
+        }
+        
+        function showResult() {
+            let data = '{"name":"John","age":30}';
+            let obj = JSON.parse(data);
+            alert(`Name: ${obj.name}\nAge: ${obj.age}`);
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let data = '{"name":"John","age":30}';
+let obj = JSON.parse(data);
+console.log(obj.name); // "John"
+console.log(obj.age);  // 30`;
+        }
+    </script>
+</body>
+</html>

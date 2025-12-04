@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 21: Form Submit Event</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        form { border: 1px solid #ccc; padding: 20px; margin: 10px; }
+        input, button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Form Submit Event (Prevent Page Reload)</h1>
+    
+    <p>Submit the form below. Normally it would reload the page, but we prevent that.</p>
+    
+    <form id="my-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br><br>
+        <button type="submit">Submit Form</button>
+    </form>
+    
+    <div id="form-result"></div>
+    
+    <br>
+    <button onclick="addSubmitListener()">Add Submit Listener</button>
+    <button onclick="removeSubmitListener()">Remove Submit Listener</button>
+    
+    <script>
+        function handleSubmit(event) {
+            // Prevent the default form submission (page reload)
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            
+            console.log('Form submitted with:', { name, email });
+            
+            const resultDiv = document.getElementById('form-result');
+            resultDiv.innerHTML = `<strong>Form submitted successfully!</strong><br>
+                                  Name: ${name}<br>
+                                  Email: ${email}`;
+            resultDiv.style.backgroundColor = '#e8f5e9';
+            resultDiv.style.padding = '10px';
+            resultDiv.style.margin = '10px';
+        }
+        
+        function addSubmitListener() {
+            const form = document.getElementById('my-form');
+            form.addEventListener('submit', handleSubmit);
+            console.log('Submit event listener added to form');
+            alert('Submit listener added! Try submitting the form.');
+        }
+        
+        function removeSubmitListener() {
+            const form = document.getElementById('my-form');
+            form.removeEventListener('submit', handleSubmit);
+            console.log('Submit event listener removed from form');
+            alert('Submit listener removed! Form will now reload page.');
+        }
+    </script>
+</body>
+</html>

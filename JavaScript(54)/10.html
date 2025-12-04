@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 10: Replace HTML Content</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        div { border: 1px solid #ccc; padding: 20px; margin: 10px; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Replace Div Content with &lt;strong&gt;Hello&lt;/strong&gt;</h1>
+    
+    <div id="content-div">
+        Original content: <span>This is some text inside the div</span>
+    </div>
+    
+    <button onclick="replaceContent()">Replace Content</button>
+    <button onclick="restoreContent()">Restore Content</button>
+    
+    <script>
+        function replaceContent() {
+            const div = document.getElementById('content-div');
+            div.innerHTML = '<strong>Hello</strong>';
+            div.style.backgroundColor = '#e8f5e9';
+        }
+        
+        function restoreContent() {
+            const div = document.getElementById('content-div');
+            div.innerHTML = 'Original content: <span>This is some text inside the div</span>';
+            div.style.backgroundColor = 'transparent';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 10: Display Tasks in DOM</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #E91E63; color: white; border: none; }
+        #taskList { margin: 20px 0; padding: 0; }
+        .task { padding: 12px; margin: 8px 0; background: #fce4ec; border-radius: 5px; display: flex; align-items: center; }
+        .task.completed { background: #e8f5e9; text-decoration: line-through; }
+        .task input { margin-right: 10px; }
+        .add-task { margin: 15px 0; }
+        .add-task input { padding: 8px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 10: Display Tasks from JSON in DOM</h1>
+    
+    <div class="code">
+        <p>let tasksJSON = '[{"id":1,"title":"Learn JavaScript","completed":false},{"id":2,"title":"Practice JSON","completed":true}]';</p>
+    </div>
+    
+    <p>Parse JSON and display tasks in an unordered list</p>
+    
+    <button onclick="loadTasks()">Load Tasks from JSON</button>
+    <button onclick="clearTasks()">Clear Tasks</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div class="add-task">
+        <input type="text" id="newTask" placeholder="Enter new task">
+        <button onclick="addTask()" style="background:#4CAF50">Add Task</button>
+    </div>
+    
+    <ul id="taskList"></ul>
+    
+    <div id="stats" style="padding:10px; background:#f5f5f5;"></div>
+    
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        const tasksJSON = '[{"id":1,"title":"Learn JavaScript","completed":false},{"id":2,"title":"Practice JSON","completed":true},{"id":3,"title":"Build Project","completed":false}]';
+        let tasks = [];
+        let nextId = 4;
+        
+        function loadTasks() {
+            tasks = JSON.parse(tasksJSON);
+            renderTasks();
+            updateStats();
+            console.log('Tasks loaded:', tasks);
+        }
+        
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<li>No tasks yet. Add some tasks!</li>';
+                return;
+            }
+            
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task ${task.completed ? 'completed' : ''}`;
+                li.id = `task-${task.id}`;
+                
+                li.innerHTML = `
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                           onchange="toggleTask(${task.id})">
+                    <span>${task.title}</span>
+                    <button onclick="deleteTask(${task.id})" 
+                            style="margin-left:auto; background:#ff6b6b; padding:5px 10px;">
+                        Delete
+                    </button>
+                `;
+                
+                taskList.appendChild(li);
+            });
+        }
+        
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                renderTasks();
+                updateStats();
+                console.log(`Task ${id} toggled:`, task.completed);
+            }
+        }
+        
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+            updateStats();
+            console.log(`Task ${id} deleted`);
+        }
+        
+        function addTask() {
+            const input = document.getElementById('newTask');
+            const title = input.value.trim();
+            
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+            
+            const newTask = {
+                id: nextId++,
+                title: title,
+                completed: false
+            };
+            
+            tasks.push(newTask);
+            renderTasks();
+            updateStats();
+            input.value = '';
+            input.focus();
+            
+            console.log('Task added:', newTask);
+        }
+        
+        function clearTasks() {
+            tasks = [];
+            renderTasks();
+            updateStats();
+            console.log('All tasks cleared');
+        }
+        
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            
+            document.getElementById('stats').innerHTML = 
+                `<strong>Statistics:</strong><br>
+                 Total: ${total} | Completed: ${completed} | Pending: ${pending}`;
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`// JSON data
+let tasksJSON = '[{"id":1,"title":"Learn JavaScript","completed":false},{"id":2,"title":"Practice JSON","completed":true}]';
+
+// Parse JSON
+let tasks = JSON.parse(tasksJSON);
+
+// Function to display tasks in DOM
+function displayTasks(tasks) {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = ''; // Clear existing
+    
+    tasks.forEach(task => {
+        // Create list item
+        const li = document.createElement('li');
+        li.className = task.completed ? 'completed' : '';
+        
+        // Create checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.onchange = () => toggleTask(task.id);
+        
+        // Create text span
+        const text = document.createElement('span');
+        text.textContent = task.title;
+        
+        // Create delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => deleteTask(task.id);
+        
+        // Assemble the list item
+        li.appendChild(checkbox);
+        li.appendChild(text);
+        li.appendChild(deleteBtn);
+        
+        // Add to list
+        taskList.appendChild(li);
+    });
+}
+
+// Convert tasks back to JSON
+function saveTasks() {
+    let json = JSON.stringify(tasks);
+    console.log('JSON to save:', json);
+    localStorage.setItem('tasks', json);
+}
+
+// Load tasks from localStorage
+function loadFromStorage() {
+    let saved = localStorage.getItem('tasks');
+    if (saved) {
+        tasks = JSON.parse(saved);
+        displayTasks(tasks);
+    }
+}
+
+// Initialize on page load
+window.onload = function() {
+    loadFromStorage();
+};`;
+        }
+        
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

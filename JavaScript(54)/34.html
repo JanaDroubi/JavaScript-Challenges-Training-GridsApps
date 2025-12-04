@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 34: Create Button with Click Event</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        #button-container { border: 2px dashed #ccc; padding: 20px; margin: 10px; min-height: 100px; }
+    </style>
+</head>
+<body>
+    <h1>Create Button Dynamically with Click Event</h1>
+    
+    <p>Click the button below to create new buttons dynamically.</p>
+    
+    <div id="button-container">
+        <p>New buttons will appear here</p>
+    </div>
+    
+    <button onclick="createNewButton()">Create New Button</button>
+    <button onclick="clearContainer()">Clear Container</button>
+    
+    <script>
+        let buttonCount = 0;
+        
+        function createNewButton() {
+            buttonCount++;
+            
+            // Create new button element
+            const newButton = document.createElement('button');
+            newButton.textContent = 'Dynamic Button ' + buttonCount;
+            newButton.id = 'dynamic-btn-' + buttonCount;
+            
+            // Add styles
+            newButton.style.backgroundColor = '#4CAF50';
+            newButton.style.color = 'white';
+            newButton.style.border = 'none';
+            newButton.style.borderRadius = '5px';
+            newButton.style.padding = '10px 15px';
+            newButton.style.margin = '5px';
+            
+            // Add click event listener
+            newButton.addEventListener('click', function() {
+                alert('Dynamic Button ' + buttonCount + ' clicked!');
+                console.log('Dynamic button clicked:', this.id);
+                
+                // Change color when clicked
+                this.style.backgroundColor = '#2196F3';
+            });
+            
+            // Append to container
+            const container = document.getElementById('button-container');
+            container.appendChild(newButton);
+            
+            console.log('Created new button:', newButton);
+        }
+        
+        function clearContainer() {
+            const container = document.getElementById('button-container');
+            container.innerHTML = '<p>New buttons will appear here</p>';
+            buttonCount = 0;
+            console.log('Cleared button container');
+        }
+    </script>
+</body>
+</html>

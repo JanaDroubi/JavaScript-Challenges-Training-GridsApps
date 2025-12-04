@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 3: Nested Objects</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .code { background: #f5f5f5; padding: 15px; margin: 10px; }
+        button { margin: 10px; padding: 10px; background: #9C27B0; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Challenge 3: Extract Nested Value</h1>
+    
+    <div class="code">
+        <p>let info = '{"user":{"name":"Sara","scores":{"math":90}}}';</p>
+    </div>
+    
+    <p>Parse JSON and extract math score from nested object</p>
+    
+    <button onclick="extractScore()">Extract Math Score</button>
+    <button onclick="showCode()">Show Code</button>
+    
+    <div id="result" style="margin:20px; padding:15px; background:#f3e5f5;"></div>
+    <div id="code" class="code" style="display:none;"></div>
+    
+    <script>
+        function extractScore() {
+            let info = '{"user":{"name":"Sara","scores":{"math":90}}}';
+            let parsed = JSON.parse(info);
+            
+            let mathScore = parsed.user.scores.math;
+            
+            document.getElementById('result').innerHTML = 
+                `Student: ${parsed.user.name}<br>
+                 Math Score: ${mathScore}<br>
+                 Path: info.user.scores.math`;
+            
+            console.log('Full object:', parsed);
+            console.log('User object:', parsed.user);
+            console.log('Scores object:', parsed.user.scores);
+            console.log('Math score:', mathScore);
+        }
+        
+        function showCode() {
+            document.getElementById('code').style.display = 'block';
+            document.getElementById('code').innerHTML = 
+`let info = '{"user":{"name":"Sara","scores":{"math":90}}}';
+let parsed = JSON.parse(info);
+
+// Direct access
+let mathScore = parsed.user.scores.math;
+
+// With optional chaining (modern JS)
+let safeScore = parsed?.user?.scores?.math || 0;
+
+// Destructuring
+let { user: { scores: { math } } } = parsed;
+
+console.log(mathScore);  // 90
+console.log(safeScore);  // 90
+console.log(math);       // 90`;
+        }
+    </script>
+</body>
+</html>

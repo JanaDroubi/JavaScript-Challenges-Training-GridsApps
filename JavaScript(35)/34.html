@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head><title>Challenge 34: Merge JSON with Spread</title></head>
+<body>
+<h1>Fetch and Merge JSON with Spread Operator</h1>
+<button onclick="fetchAndMerge()">Fetch & Merge Data</button>
+<button onclick="showCode()">Show Code</button>
+<div id="result" style="margin:20px 0;"></div>
+<div id="code" style="display:none; background:#f5f5f5; padding:10px;"></div>
+<script>
+async function fetchAndMerge() {
+    try {
+        // Fetch multiple data sources
+        const [usersResponse, postsResponse, todosResponse] = await Promise.all([
+            fetch('https://jsonplaceholder.typicode.com/users/1'),
+            fetch('https://jsonplaceholder.typicode.com/posts?userId=1'),
+            fetch('https://jsonplaceholder.typicode.com/todos?userId=1')
+        ]);
+        
+        const user = await usersResponse.json();
+        const posts = await postsResponse.json();
+        const todos = await todosResponse.json();
+        
+        console.log('Fetched data:', { user, posts: posts.length, todos: todos.length });
+        
+        // Merge using spread operator
+        const mergedData = {
+            ...user,  // Spread user properties
+            posts: posts.slice(0, 3),  // Take first 3 posts
+            todos: todos.filter(t => t.completed).slice(0, 3),  // Take first 3 completed todos
+            stats: {
+                postCount: posts.length,
+                todoCount: todos.length,
+                completedTodos: todos.filter(t => t.completed).length,
+                fetchTime: new Date().toISOString()
+            }
+        };
+        
+        // Alternative: Deep merge
+        const deepMerged = {
+            user: { ...user },
+            posts: [...posts],
+            todos: [...todos],
+            metadata: {
+                fetchedAt: new Date(),
+                source: 'JSONPlaceholder'
+            }
+        };
+        
+        // Display results
+        displayResults(mergedData, deepMerged);
+        
+        return mergedData;
+        
+    } catch (error) {
+        document.getElementById('result').innerHTML = `Error: ${error.message}`;
+        console.error('Error:', error);
+    }
+}
+
+function displayResults(mergedData, deepMerged) {
+    document.getElementById('result').innerHTML = `
+        <h3>Merged Data (Spread Operator):</h3>
+        <pre style="background:#e8f5e9; padding:10px; overflow:auto;">
+${JSON.stringify(mergedData, null, 2)}
+        </pre>
+        
+        <h3>Spread Operator Examples:</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div style="padding:15px; background:#e3f2fd;">
+                <h4>Array Spread</h4>
+                <code>
+const arr1 = [1, 2, 3];<br>
+const arr2 = [4, 5, 6];<br>
+const combined = [...arr1, ...arr2];<br>
+// Result: [1, 2, 3, 4, 5, 6]
+                </code>
+            </div>
+            
+            <div style="padding:15px; background:#f3e5f5;">
+                <h4>Object Spread</h4>
+                <code>
+const obj1 = {a: 1, b: 2};<br>
+const obj2 = {b: 3, c: 4};<br>
+const merged = {...obj1, ...obj2};<br>
+// Result: {a: 1, b: 3, c: 4}
+                </code>
+            </div>
+        </div>
+        
+        <h3>Statistics:</h3>
+        <ul>
+            <li>User: ${mergedData.name}</li>
+            <li>Email: ${mergedData.email}</li>
+            <li>Posts shown: ${mergedData.posts.length}</li>
+            <li>Completed todos: ${mergedData.todos.length}</li>
+            <li>Total posts: ${mergedData.stats.postCount}</li>
+        </ul>
+    `;
+}
+
+function showCode() {
+    document.getElementById('code').innerHTML = 
+`// Using spread operator to merge JSON data
+async function fetchAndMerge() {
+    // Fetch multiple endpoints
+    const [userRes, postsRes] = await Promise.all([
+        fetch('https://api.example.com/user/1'),
+        fetch('https://api.example.com/posts?userId=1')
+    ]);
+    
+    const user = await userRes.json();
+    const posts = await postsRes.json();
+    
+    // Merge with spread operator
+    const merged = {
+        ...user,           // Spread all user properties
+        posts: posts,      // Add posts array
+        metadata: {        // Add metadata
+            fetchedAt: new Date(),
+            source: 'API'
+        }
+    };
+    
+    return merged;
+}
+
+// Array spread examples
+const array1 = [1, 2, 3];
+const array2 = [4, 5, 6];
+
+// Combine arrays
+const combinedArray = [...array1, ...array2]; // [1, 2, 3, 4, 5, 6]
+
+// Copy array
+const arrayCopy = [...array1]; // New array with same values
+
+// Add elements
+const arrayWithMore = [0, ...array1, 4]; // [0, 1, 2, 3, 4]
+
+// Object spread examples
+const obj1 = { name: 'John', age: 30 };
+const obj2 = { age: 31, city: 'NYC' };
+
+// Merge objects (later values override earlier ones)
+const mergedObj = { ...obj1, ...obj2 }; 
+// { name: 'John', age: 31, city: 'NYC' }
+
+// Copy object
+const objCopy = { ...obj1 }; // New object with same properties
+
+// Add properties
+const objWithMore = { ...obj1, id: 1, active: true };
+// { name: 'John', age: 30, id: 1, active: true }
+
+// Deep merge (nested objects)
+const deepObj1 = { 
+    user: { name: 'John', settings: { theme: 'light' } }
+};
+const deepObj2 = {
+    user: { settings: { language: 'en' } }
+};
+
+// This doesn't deep merge settings
+const shallowMerge = { ...deepObj1, ...deepObj2 };
+// user: { settings: { language: 'en' } } - theme is lost!
+
+// For deep merge, need to handle nested objects
+const deepMerge = {
+    ...deepObj1,
+    user: {
+        ...deepObj1.user,
+        settings: {
+            ...deepObj1.user.settings,
+            ...deepObj2.user.settings
+        }
+    }
+};
+// user: { name: 'John', settings: { theme: 'light', language: 'en' } }
+
+// Practical example: Combining API responses
+async function getUserProfile(userId) {
+    const [user, posts, comments] = await Promise.all([
+        fetchUser(userId),
+        fetchUserPosts(userId),
+        fetchUserComments(userId)
+    ]);
+    
+    return {
+        ...user,
+        activity: {
+            posts: [...posts],
+            comments: [...comments]
+        },
+        stats: {
+            postCount: posts.length,
+            commentCount: comments.length,
+            lastActive: new Date()
+        }
+    };
+}
+
+// Spread in function arguments
+function processData(...args) {
+    // args is an array of all arguments
+    console.log('Processing', args.length, 'items');
+}
+
+processData(...combinedArray); // Spreads array as individual arguments`;
+    document.getElementById('code').style.display = 'block';
+}
+</script>
+</body>
+</html>
