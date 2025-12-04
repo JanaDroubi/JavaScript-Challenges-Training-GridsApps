@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 27 - Range Check</title>
+</head>
+<body>
+    <h1>Question 27: Check if Number is Between 10 and 50</h1>
+
+    <script>
+        console.log("=== Range Check: Greater than 10 AND Less than 50 ===");
+
+        function checkRange(number) {
+            return number > 10 && number < 50;
+        }
+
+        // Test with different numbers
+        console.log("25 > 10 && 25 < 50:", checkRange(25));
+        console.log("5 > 10 && 5 < 50:", checkRange(5));
+        console.log("10 > 10 && 10 < 50:", checkRange(10));  // false (not greater than 10)
+        console.log("50 > 10 && 50 < 50:", checkRange(50));  // false (not less than 50)
+        console.log("35 > 10 && 35 < 50:", checkRange(35));
+        console.log("100 > 10 && 100 < 50:", checkRange(100));
+
+        console.log("\nCondition: number > 10 && number < 50");
+        console.log("Both conditions must be true using AND (&&) operator");
+    </script>
+</body>
+</html>

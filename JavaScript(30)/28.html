@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 28 - != vs !==</title>
+</head>
+<body>
+    <h1>Question 28: != vs !== Difference</h1>
+
+    <script>
+        console.log("=== != (Loose Inequality) vs !== (Strict Inequality) ===");
+
+        console.log("Code: console.log(10 != '10')");
+        console.log("Output:", 10 != "10");
+
+        console.log("\nCode: console.log(10 !== '10')");
+        console.log("Output:", 10 !== "10");
+
+        console.log("\nMore Examples:");
+        console.log("0 != false:", 0 != false);     // false (equal after conversion)
+        console.log("0 !== false:", 0 !== false);   // true (different types)
+
+        console.log("1 != true:", 1 != true);       // false (equal after conversion)
+        console.log("1 !== true:", 1 !== true);     // true (different types)
+
+        console.log("\nExplanation:");
+        console.log("!= (Loose Inequality): Checks values after type conversion");
+        console.log("!== (Strict Inequality): Checks both value AND type");
+        console.log("10 != '10' → false (equal after conversion)");
+        console.log("10 !== '10' → true (different types)");
+    </script>
+</body>
+</html>

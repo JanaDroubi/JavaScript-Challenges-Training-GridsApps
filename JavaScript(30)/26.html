@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 26 - Comparison Output</title>
+</head>
+<body>
+    <h1>Question 26: Predict Comparison Output</h1>
+
+    <script>
+        console.log("=== Comparison Operator Output ===");
+
+        console.log("Code: console.log(5 == '5')");
+        console.log("Output:", 5 == "5");
+
+        console.log("\nCode: console.log(5 === '5')");
+        console.log("Output:", 5 === "5");
+
+        console.log("\nExplanation:");
+        console.log("5 == '5' → true (loose equality, string '5' converted to number 5)");
+        console.log("5 === '5' → false (strict equality, different types: number vs string)");
+    </script>
+</body>
+</html>

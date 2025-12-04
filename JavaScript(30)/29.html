@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 29 - Age Range Check</title>
+</head>
+<body>
+    <h1>Question 29: Check if Age is Between 18 and 60 (Inclusive)</h1>
+
+    <script>
+        console.log("=== Age Range Check: 18 to 60 Inclusive ===");
+
+        function checkAge(age) {
+            return age >= 18 && age <= 60;
+        }
+
+        // Test with different ages
+        console.log("Age 25:", checkAge(25), "(25 >= 18 && 25 <= 60)");
+        console.log("Age 18:", checkAge(18), "(18 >= 18 && 18 <= 60)");
+        console.log("Age 60:", checkAge(60), "(60 >= 18 && 60 <= 60)");
+        console.log("Age 17:", checkAge(17), "(17 >= 18 && 17 <= 60)");
+        console.log("Age 61:", checkAge(61), "(61 >= 18 && 61 <= 60)");
+        console.log("Age 45:", checkAge(45), "(45 >= 18 && 45 <= 60)");
+
+        console.log("\nCondition: age >= 18 && age <= 60");
+        console.log(">= means 'greater than or equal to'");
+        console.log("<= means 'less than or equal to'");
+        console.log("&& means BOTH conditions must be true");
+    </script>
+</body>
+</html>

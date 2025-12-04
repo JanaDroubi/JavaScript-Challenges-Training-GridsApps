@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 17 - Modulus Operator</title>
+</head>
+<body>
+    <h1>Question 17: Modulus Operator (% for Even/Odd)</h1>
+
+    <script>
+        console.log("=== Modulus Operator - Even/Odd Check ===");
+
+        function checkEvenOdd(number) {
+            if (number % 2 === 0) {
+                return "Even";
+            } else {
+                return "Odd";
+            }
+        }
+
+        // Test with different numbers
+        console.log("7 % 2 =", 7 % 2, "→", checkEvenOdd(7));
+        console.log("12 % 2 =", 12 % 2, "→", checkEvenOdd(12));
+        console.log("25 % 2 =", 25 % 2, "→", checkEvenOdd(25));
+        console.log("0 % 2 =", 0 % 2, "→", checkEvenOdd(0));
+
+
+    </script>
+</body>
+</html>

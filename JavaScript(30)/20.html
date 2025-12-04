@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 20 - Increment Operators</title>
+</head>
+<body>
+    <h1>Question 20: Three Ways to Increment</h1>
+    <p>Open browser console (F12) to see the result</p>
+
+    <script>
+        console.log("=== Three Ways to Increment by 1 ===");
+
+        // Method 1: Using + operator
+        let num1 = 5;
+        console.log("Method 1 - Using + operator:");
+        console.log("Before: num1 =", num1);
+        num1 = num1 + 1;
+        console.log("After: num1 = num1 + 1 →", num1);
+
+        // Method 2: Using += operator
+        let num2 = 5;
+        console.log("\nMethod 2 - Using += operator:");
+        console.log("Before: num2 =", num2);
+        num2 += 1;
+        console.log("After: num2 += 1 →", num2);
+
+        // Method 3: Using ++ operator
+        let num3 = 5;
+        console.log("\nMethod 3 - Using ++ operator:");
+        console.log("Before: num3 =", num3);
+        num3++;
+        console.log("After: num3++ →", num3);
+
+        console.log("\nBonus - Pre-increment vs Post-increment:");
+        let x = 5;
+        let y = 5;
+        console.log("x = 5, y = 5");
+        console.log("x++ (post-increment):", x++); // Returns then increments
+        console.log("++y (pre-increment):", ++y);  // Increments then returns
+        console.log("After: x =", x, ", y =", y);
+    </script>
+</body>
+</html>

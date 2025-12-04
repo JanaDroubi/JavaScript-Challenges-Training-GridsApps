@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 30 - String Concatenation</title>
+</head>
+<body>
+    <h1>Question 30: String Concatenation Methods</h1>
+
+    <script>
+        console.log("=== String Concatenation Methods ===");
+
+        let str1 = "JavaScript";
+        let str2 = "is fun";
+
+        console.log("String 1:", str1);
+        console.log("String 2:", str2);
+
+        // Method 1: Using + operator
+        let result1 = str1 + " " + str2;
+        console.log("\nUsing + operator:");
+        console.log("str1 + ' ' + str2 =", result1);
+
+        // Method 2: Using template literals
+        let result2 = `${str1} ${str2}`;
+        console.log("\nUsing template literals:");
+        console.log("`${str1} ${str2}` =", result2);
+
+        // More examples with template literals
+        let name = "Alice";
+        let age = 25;
+
+        console.log("\nTemplate Literals with variables:");
+        console.log(`My name is ${name} and I am ${age} years old`);
+        console.log(`Calculation: 5 + 3 = ${5 + 3}`);
+
+        console.log("\nAdvantages of template literals:");
+        console.log("- Easier to read and write");
+        console.log("- Can embed variables and expressions directly");
+        console.log("- Support multi-line strings");
+    </script>
+</body>
+</html>

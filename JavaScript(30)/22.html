@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 22 - Variable Tracking</title>
+</head>
+<body>
+    <h1>Question 22: What is the final value of x?</h1>
+
+    <script>
+        console.log("=== Tracking Variable Changes ===");
+
+        let x = 5;
+        console.log("Step 1: let x = 5 → x =", x);
+
+        x += 10; // x = x + 10
+        console.log("Step 2: x += 10 → x =", x);
+
+        x -= 3; // x = x - 3
+        console.log("Step 3: x -= 3 → x =", x);
+
+        x *= 2; // x = x * 2
+        console.log("Step 4: x *= 2 → x =", x);
+
+        console.log("\nFinal value of x:", x);
+
+     </script>
+</body>
+</html>
